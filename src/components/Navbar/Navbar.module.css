@@ -1,0 +1,70 @@
+.navbar {
+  background-color: #006241;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-family: 'Helvetica Neue', sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.star {
+  color: #cba258;
+  font-size: 1.5rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Order Now button - oro */
+.button {
+  background-color: #cba258;
+  color: #1e3932;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #d6b46b;
+}
+
+/* Bottoni testuali - bianchi con hover effetto zoom */
+.linkButton {
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.linkButton:hover {
+  transform: scale(1.1);
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}

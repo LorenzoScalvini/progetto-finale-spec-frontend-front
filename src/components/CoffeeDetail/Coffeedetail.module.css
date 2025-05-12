@@ -1,0 +1,165 @@
+/* CoffeeDetail.module.css */
+
+.container {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #f9f9f7;
+  min-height: 100vh;
+}
+
+.backButton {
+  padding: 0.75rem 1.5rem;
+  background-color: #006241;
+  color: white;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+  border: none;
+  cursor: pointer;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backButton:hover {
+  background-color: #004d33;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.coffeeHeader {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #006241;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.coffeeCard {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.imageWrapper {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.coffeeImage {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: cover;
+  display: block;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detailLabel {
+  font-weight: 600;
+  color: #006241;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailValue {
+  color: #2b2b2b;
+  font-size: 1rem;
+}
+
+.organicBadge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: rgba(203, 162, 88, 0.1);
+  color: #cba258;
+  font-weight: 600;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.description {
+  padding-top: 2rem;
+  border-top: 1px solid #e8e8e8;
+  margin-top: 2rem;
+}
+
+.descriptionTitle {
+  color: #006241;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.description p {
+  line-height: 1.6;
+  color: #333;
+}
+
+.metaData {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8e8e8;
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.loadingSpinner {
+  border: 3px solid rgba(0, 98, 65, 0.2);
+  border-top: 3px solid #006241;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.errorAlert {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.errorAlert h3 {
+  color: #006241;
+  margin-bottom: 0.5rem;
+}
+
+.errorAlert p {
+  margin-bottom: 1.5rem;
+  color: #555;
+}
