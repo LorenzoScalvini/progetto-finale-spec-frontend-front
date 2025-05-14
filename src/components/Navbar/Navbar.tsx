@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Navbar.module.css';
+import { Link } from 'react-router-dom';
 
 interface StarbucksNavbarProps {
   logoSrc: string;
@@ -18,14 +19,14 @@ const Navbar: React.FC<StarbucksNavbarProps> = ({
 }) => {
   return (
     <nav className={styles.navbar}>
-      <div className={styles.brand}>
+      <Link to="/" className={styles.brand}>
         <span className={styles.star}>★</span> {brandName}
-      </div>
+      </Link>
 
       <div className={styles.actions}>
-        <button className={styles.linkButton}>Home</button>
-        <button className={styles.linkButton}>Nuove Offerte</button>
-        <button className={styles.linkButton}>Contattaci</button>
+        <Link to="/" className={styles.linkButton}>Home</Link>
+        <Link to="/coffees/1" className={styles.linkButton}>Nuove Offerte</Link>
+        <Link to="/coffeecomparator" className={styles.linkButton}>Confronta</Link>
 
         <button className={styles.button} onClick={onButtonClick}>
           {buttonLabel}

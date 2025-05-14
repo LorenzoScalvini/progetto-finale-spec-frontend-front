@@ -1,3 +1,146 @@
+/* App.css - Integration */
+@import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --sbux-green: #006241;
+  --sbux-dark-green: #1e3932;
+  --sbux-gold: #cba258;
+  --sbux-light-gold: #d6b46b;
+  --sbux-light-bg: #f9f9f7;
+  --sbux-light-gray: #f4f1ee;
+  --sbux-white: #ffffff;
+  --sbux-text-dark: #2e2e2e;
+  --sbux-text-light: #5e5e5e;
+}
+
 * {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--sbux-light-bg);
+  color: var(--sbux-text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Global animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Page transitions */
+.page-transition {
+  flex: 1;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Notification/toast styles */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--sbux-dark-green);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 400px;
+}
+
+.notification.success {
+  background-color: var(--sbux-green);
+}
+
+.notification.error {
+  background-color: #e53e3e;
+}
+
+.notification.warning {
+  background-color: var(--sbux-gold);
+  color: var(--sbux-dark-green);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .comparisonGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .selectorContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(249, 249, 247, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-overlay-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(203, 162, 88, 0.2);
+  border-top: 6px solid var(--sbux-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }

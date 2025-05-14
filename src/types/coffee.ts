@@ -1,4 +1,4 @@
-// Tipo base per il coffee mostrato nella lista
+// Basic coffee type for the list view
 export interface Coffee {
   id: number;
   title: string;
@@ -7,7 +7,7 @@ export interface Coffee {
   updatedAt: string;
 }
 
-// Tipo esteso per i dettagli del coffee
+// Detailed coffee type for individual view
 export interface CoffeeDetails extends Coffee {
   origin: string;
   roastLevel: string;
@@ -21,8 +21,18 @@ export interface CoffeeDetails extends Coffee {
   imageUrl: string;
 }
 
-// Tipo per la risposta dall'API
+// API response types
+export interface CoffeeListResponse {
+  success: boolean;
+  coffees: Coffee[];
+}
+
 export interface CoffeeDetailResponse {
   success: boolean;
   coffee: CoffeeDetails;
+}
+
+// Simple price formatter
+export function formatPrice(price: number): string {
+  return '$' + price.toFixed(2);
 }

@@ -1,8 +1,9 @@
 .container {
   padding: 2rem;
-  background-color: #f4f1ee;
+  background-color: #f9f9f7;
   font-family: 'Helvetica Neue', sans-serif;
-  color: #2e2e2e;
+  min-height: calc(100vh - 80px);
+  animation: fadeIn 0.5s ease-out;
 }
 
 .header {
@@ -10,6 +11,7 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .title {
@@ -25,78 +27,93 @@
 .starbucksStar {
   color: #cba258;
   font-size: 2rem;
+  animation: spin 3s linear infinite;
 }
 
 .controls {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
 .searchInput {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border: 2px solid #1e3932;
   border-radius: 25px;
   font-size: 1rem;
   outline: none;
-  min-width: 200px;
-  transition: border-color 0.3s;
+  min-width: 250px;
+  transition: all 0.3s ease;
+  background-color: white;
 }
 
 .searchInput:focus {
   border-color: #cba258;
+  box-shadow: 0 0 0 3px rgba(203, 162, 88, 0.3);
 }
 
 .categorySelect {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border: 2px solid #1e3932;
   border-radius: 25px;
   font-size: 1rem;
-  background-color: #fff;
+  background-color: white;
   color: #1e3932;
-  min-width: 200px;
+  min-width: 250px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categorySelect:hover {
+  border-color: #cba258;
 }
 
 .sortButton {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.5rem;
   background-color: #1e3932;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 25px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 }
 
 .sortButton:hover {
   background-color: #2c5248;
+  transform: translateY(-2px);
 }
 
 .sortButton.active {
   background-color: #cba258;
   color: #1e3932;
+  box-shadow: 0 2px 8px rgba(203, 162, 88, 0.3);
 }
 
 .resultsInfo {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-style: italic;
   color: #5e5e5e;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
+  animation: slideUp 0.5s ease-out;
 }
 
 .noResults {
   text-align: center;
   color: #a10000;
-  font-weight: bold;
-  margin-top: 2rem;
-  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 3rem;
+  font-size: 1.2rem;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .loadingContainer {
@@ -110,17 +127,37 @@
 }
 
 .loadingSpinner {
-  width: 50px;
-  height: 50px;
-  border: 6px solid #ccc;
-  border-top: 6px solid #1e3932;
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(203, 162, 88, 0.2);
+  border-top: 6px solid #cba258;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

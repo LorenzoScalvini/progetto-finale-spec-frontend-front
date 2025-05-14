@@ -6,65 +6,134 @@
   align-items: center;
   color: white;
   font-family: 'Helvetica Neue', sans-serif;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
 }
 
 .brand {
   font-size: 1.8rem;
-  font-weight: bold;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.brand:hover {
+  transform: scale(1.02);
 }
 
 .star {
   color: #cba258;
   font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
-/* Order Now button - oro */
 .button {
   background-color: #cba258;
   color: #1e3932;
   border: none;
-  padding: 0.5rem 1.2rem;
+  padding: 0.6rem 1.5rem;
   border-radius: 25px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover {
   background-color: #d6b46b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Bottoni testuali - bianchi con hover effetto zoom */
 .linkButton {
   background: transparent;
   color: white;
   border: none;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  padding: 0.5rem;
+  position: relative;
 }
 
-.linkButton:hover {
-  transform: scale(1.1);
+.linkButton::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #cba258;
+  transition: width 0.3s ease;
+}
+
+.linkButton:hover::after {
+  width: 100%;
 }
 
 .logoContainer {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .logo {
   height: 40px;
   width: auto;
   object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: rotate(-5deg);
+}
+
+.linkButton {
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem;
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.linkButton::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #cba258;
+  transition: width 0.3s ease;
+}
+
+.linkButton:hover::after {
+  width: 100%;
 }
