@@ -1,5 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { Coffee } from '../../types/coffee';
+import styles from './CoffeeCard.module.css';
 
 interface CoffeeCardProps {
   coffee: Coffee;
@@ -7,23 +8,15 @@ interface CoffeeCardProps {
 }
 
 function CoffeeCard({ coffee, onClick }: CoffeeCardProps) {
-  // Formatta la data in un formato più leggibile
-  const formattedDate = useMemo(() => {
-    if (!coffee.updatedAt) return '';
-    return new Date(coffee.updatedAt).toLocaleDateString();
-  }, [coffee.updatedAt]);
-
   return (
     <div 
-      className="p-4 border rounded-md cursor-pointer hover:bg-gray-100"
+      className={styles.card}
       onClick={() => onClick(coffee.id)}
     >
-      <h2 className="text-lg font-bold">{coffee.title}</h2>
-      <p className="text-gray-600">{coffee.category}</p>
-      <p className="text-xs text-gray-400">Aggiornato: {formattedDate}</p>
+      <h2 className={styles.title}>☕{coffee.title}</h2>
+      <p className={styles.category}>{coffee.category}</p>
     </div>
   );
 }
 
-// Memoizziamo il componente per evitare re-render inutili
 export default memo(CoffeeCard);
