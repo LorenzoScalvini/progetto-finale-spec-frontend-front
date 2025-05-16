@@ -129,7 +129,7 @@ export default function CoffeeComparison() {
       <header className={styles.header}>
         <h1>Coffee Comparison</h1>
         <div className={styles.actions}>
-          <button onClick={() => navigate('/coffees')}>← Back to Menu</button>
+          <button onClick={() => navigate('/')}>← Back to Menu</button>
           <button 
             onClick={resetComparison}
             disabled={!coffees[0] && !coffees[1]}

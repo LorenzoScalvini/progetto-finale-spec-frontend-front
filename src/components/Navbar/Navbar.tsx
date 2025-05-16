@@ -20,21 +20,19 @@ const Navbar: React.FC<StarbucksNavbarProps> = ({
   return (
     <nav className={styles.navbar}>
       <Link to="/" className={styles.brand}>
-        <span className={styles.star}>★</span> {brandName}
+        <div className={styles.logoContainer}>
+          <img src={logoSrc} alt={altText} className={styles.logo} />
+        </div> {brandName}
       </Link>
 
       <div className={styles.actions}>
         <Link to="/" className={styles.linkButton}>Home</Link>
-        <Link to="/coffees/1" className={styles.linkButton}>Nuove Offerte</Link>
+        <Link to="/coffeesfavorite" className={styles.linkButton}>Preferiti</Link>
         <Link to="/coffeecomparator" className={styles.linkButton}>Confronta</Link>
 
         <button className={styles.button} onClick={onButtonClick}>
           {buttonLabel}
         </button>
-
-        <div className={styles.logoContainer}>
-          <img src={logoSrc} alt={altText} className={styles.logo} />
-        </div>
       </div>
     </nav>
   );

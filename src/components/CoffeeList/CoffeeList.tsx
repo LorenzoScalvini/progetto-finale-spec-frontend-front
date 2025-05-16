@@ -1,40 +1,34 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CoffeeCard from '../CoffeeCard/CoffeeCard';
 import { Coffee } from '../../types/coffee';
 import styles from './CoffeeList.module.css';
 
+type SortBy = 'none' | 'title' | 'category';
+type SortDirection = 'asc' | 'desc';
+
 export default function CoffeeList() {
-  const [state, setState] = useState({
-    coffees: [] as Coffee[],
-    searchTerm: '',
-    displayedSearchTerm: '',
-    selectedCategory: '',
-    isLoading: true,
-    sortBy: 'none' as 'none' | 'title' | 'category',
-    sortDirection: 'asc' as 'asc' | 'desc'
-  });
+  const [coffees, setCoffees] = useState<Coffee[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [displayedSearchTerm, setDisplayedSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [sortBy, setSortBy] = useState<SortBy>('none');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   
   const navigate = useNavigate();
-  const debounceTimer = useRef<number | null>(null);
-
-  const { coffees, searchTerm, displayedSearchTerm, selectedCategory, isLoading, sortBy, sortDirection } = state;
+  const debounceTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const fetchCoffees = async () => {
       try {
         const response = await fetch('http://localhost:3001/coffees');
         if (!response.ok) throw new Error('Failed to fetch coffees');
-        
-        const data = await response.json();
-        setState(prevState => ({
-          ...prevState,
-          coffees: data,
-          isLoading: false
-        }));
+        setCoffees(await response.json());
       } catch (error) {
         console.error('Error fetching coffees:', error);
-        setState(prevState => ({ ...prevState, isLoading: false }));
+      } finally {
+        setIsLoading(false);
       }
     };
     
@@ -42,15 +36,8 @@ export default function CoffeeList() {
   }, []);
 
   useEffect(() => {
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
-
     debounceTimer.current = window.setTimeout(() => {
-      setState(prevState => ({
-        ...prevState,
-        displayedSearchTerm: prevState.searchTerm
-      }));
+      setDisplayedSearchTerm(searchTerm);
     }, 300);
 
     return () => {
@@ -60,68 +47,47 @@ export default function CoffeeList() {
     };
   }, [searchTerm]);
 
-  const handleCardClick = useCallback((id: number) => {
-    navigate(`/coffees/${id}`);
-  }, [navigate]);
+  const handleCardClick = (id: number) => navigate(`/coffees/${id}`);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value);
+  
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+    setSortBy(e.target.value ? 'category' : 'none');
+    setSortDirection('asc');
+  };
 
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setState(prevState => ({
-      ...prevState,
-      searchTerm: e.target.value
-    }));
-  }, []);
+  const toggleAlphabeticalSort = () => {
+    setSortBy('title');
+    setSortDirection(prev => sortBy === 'title' && prev === 'asc' ? 'desc' : 'asc');
+  };
 
-  const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setState(prevState => ({
-      ...prevState,
-      selectedCategory: e.target.value,
-      sortBy: e.target.value ? 'category' : 'none',
-      sortDirection: 'asc'
-    }));
-  }, []);
-
-  const toggleAlphabeticalSort = useCallback(() => {
-    setState(prevState => ({
-      ...prevState,
-      sortBy: 'title',
-      sortDirection: prevState.sortBy === 'title' && prevState.sortDirection === 'asc' ? 'desc' : 'asc'
-    }));
-  }, []);
-
-  const categories = useMemo(() => 
-    ['', ...new Set(coffees.map(coffee => coffee.category))], 
-    [coffees]
-  );
+  const categories = useMemo(() => ['', ...new Set(coffees.map(c => c.category))], [coffees]);
 
   const filteredCoffees = useMemo(() => {
-    let result = coffees.filter(coffee => 
-      coffee.title.toLowerCase().includes(displayedSearchTerm.toLowerCase()) &&
-      (!selectedCategory || coffee.category === selectedCategory)
+    let result = coffees.filter(c => 
+      c.title.toLowerCase().includes(displayedSearchTerm.toLowerCase()) &&
+      (!selectedCategory || c.category === selectedCategory)
     );
 
     if (sortBy === 'title') {
-      result = [...result].sort((a, b) => {
-        const compare = a.title.localeCompare(b.title);
-        return sortDirection === 'asc' ? compare : -compare;
-      });
+      result.sort((a, b) => sortDirection === 'asc' 
+        ? a.title.localeCompare(b.title) 
+        : b.title.localeCompare(a.title));
     } else if (sortBy === 'category') {
-      result = [...result].sort((a, b) => {
-        const compare = a.category.localeCompare(b.category);
-        return sortDirection === 'asc' ? compare : -compare;
-      });
+      result.sort((a, b) => sortDirection === 'asc' 
+        ? a.category.localeCompare(b.category) 
+        : b.category.localeCompare(a.category));
     }
 
     return result;
   }, [coffees, displayedSearchTerm, selectedCategory, sortBy, sortDirection]);
 
-  if (isLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}></div>
-        <p>Loading our premium coffees...</p>
-      </div>
-    );
-  }
+  if (isLoading) return (
+    <div className={styles.loadingContainer}>
+      <div className={styles.loadingSpinner}></div>
+      <p>Loading our premium coffees...</p>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
