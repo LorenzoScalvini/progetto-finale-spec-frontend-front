@@ -1,11 +1,27 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CoffeeCard from '../CoffeeCard/CoffeeCard';
-import { Coffee } from '../../types/coffee';
 import styles from './CoffeeList.module.css';
+import { ArrowRightIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 type SortBy = 'none' | 'title' | 'category';
 type SortDirection = 'asc' | 'desc';
+
+type Coffee = {
+  id: number;
+  title: string;
+  category: string;
+  origin: string;
+  roastLevel: string;
+  flavor: string[];
+  acidity: number;
+  body: number;
+  price: number;
+  packaging: string;
+  organic: boolean;
+  description: string;
+  imageUrl?: string;
+};
 
 export default function CoffeeList() {
   const [coffees, setCoffees] = useState<Coffee[]>([]);
@@ -15,41 +31,49 @@ export default function CoffeeList() {
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState<SortBy>('none');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [favorites, setFavorites] = useState<number[]>([]);
   
   const navigate = useNavigate();
-  const debounceTimer = useRef<number | undefined>(undefined);
 
+  // Fetch coffees and favorites on component mount
   useEffect(() => {
-    const fetchCoffees = async () => {
+    const fetchData = async () => {
       try {
+        // Load favorites from localStorage
+        const savedFavorites = localStorage.getItem('favoriteCoffees');
+        if (savedFavorites) {
+          setFavorites(JSON.parse(savedFavorites));
+        }
+
+        // Fetch coffees
         const response = await fetch('http://localhost:3001/coffees');
         if (!response.ok) throw new Error('Failed to fetch coffees');
         setCoffees(await response.json());
       } catch (error) {
-        console.error('Error fetching coffees:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }
     };
     
-    fetchCoffees();
+    fetchData();
   }, []);
 
+  // Debounce search term
   useEffect(() => {
-    debounceTimer.current = window.setTimeout(() => {
+    const timer = setTimeout(() => {
       setDisplayedSearchTerm(searchTerm);
     }, 300);
 
-    return () => {
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-    };
+    return () => clearTimeout(timer);
   }, [searchTerm]);
 
   const handleCardClick = (id: number) => navigate(`/coffees/${id}`);
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value);
-  
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
     setSortBy(e.target.value ? 'category' : 'none');
@@ -59,6 +83,15 @@ export default function CoffeeList() {
   const toggleAlphabeticalSort = () => {
     setSortBy('title');
     setSortDirection(prev => sortBy === 'title' && prev === 'asc' ? 'desc' : 'asc');
+  };
+
+  const handleToggleFavorite = (id: number) => {
+    const newFavorites = favorites.includes(id)
+      ? favorites.filter(favId => favId !== id)
+      : [...favorites, id];
+    
+    setFavorites(newFavorites);
+    localStorage.setItem('favoriteCoffees', JSON.stringify(newFavorites));
   };
 
   const categories = useMemo(() => ['', ...new Set(coffees.map(c => c.category))], [coffees]);
@@ -82,28 +115,33 @@ export default function CoffeeList() {
     return result;
   }, [coffees, displayedSearchTerm, selectedCategory, sortBy, sortDirection]);
 
-  if (isLoading) return (
-    <div className={styles.loadingContainer}>
-      <div className={styles.loadingSpinner}></div>
-      <p>Loading our premium coffees...</p>
-    </div>
-  );
+  if (isLoading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
+        <p>Loading our premium coffees...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          <span className={styles.starbucksStar}>★</span> La nostra collezione
+          <span className={styles.starbucksStar}>★</span> Our Coffee Collection
         </h1>
         
         <div className={styles.controls}>
-          <input
-            type="text"
-            placeholder="Find your perfect coffee..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className={styles.searchInput}
-          />
+          <div className={styles.searchContainer}>
+            <MagnifyingGlassIcon className={styles.searchIcon} />
+            <input
+              type="text"
+              placeholder="Find your perfect coffee..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className={styles.searchInput}
+            />
+          </div>
           
           <select
             value={selectedCategory}
@@ -122,12 +160,21 @@ export default function CoffeeList() {
           >
             {sortBy === 'title' ? (sortDirection === 'asc' ? 'A-Z ↓' : 'Z-A ↑') : 'Sort A-Z'}
           </button>
+
+          <button 
+            onClick={() => navigate('/favorites')}
+            className={styles.favoritesButton}
+          >
+            <span className={styles.favoritesText}>My Favorites</span>
+            <ArrowRightIcon className={styles.favoritesIcon} />
+          </button>
         </div>
       </div>
 
       <div className={styles.resultsInfo}>
         Showing {filteredCoffees.length} of {coffees.length} premium selections
         {sortBy === 'category' && selectedCategory && ` (sorted by category)`}
+        {favorites.length > 0 && ` • ${favorites.length} in favorites`}
       </div>
 
       <div className={styles.grid}>
@@ -136,6 +183,8 @@ export default function CoffeeList() {
             key={coffee.id} 
             coffee={coffee}
             onClick={handleCardClick}
+            isFavorite={favorites.includes(coffee.id)}
+            onToggleFavorite={handleToggleFavorite}
           />
         ))}
       </div>
