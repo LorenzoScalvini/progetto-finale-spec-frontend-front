@@ -1,12 +1,12 @@
+/* Navbar.module.css */
 .navbar {
-  background-color: #006241;
-  padding: 1rem 2rem;
+  background-color: var(--primary-green);
+  padding: var(--space-md) var(--space-xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
-  font-family: 'Helvetica Neue', sans-serif;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--white);
+  box-shadow: var(--shadow-sm);
   position: relative;
   z-index: 100;
 }
@@ -14,115 +14,58 @@
 .brand {
   font-size: 1.8rem;
   font-weight: 600;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: transform 0.3s ease;
+  gap: var(--space-sm);
+  transition: transform var(--transition-normal);
   text-decoration: none;
-  color: #ffffff;
+  color: inherit;
 }
 
 .brand:hover {
   transform: scale(1.02);
 }
 
-.star {
-  color: #cba258;
-  font-size: 1.5rem;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.button {
-  background-color: #cba258;
-  color: #1e3932;
-  border: none;
-  padding: 0.6rem 1.5rem;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-  background-color: #d6b46b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.linkButton {
-  background: transparent;
-  color: white;
-  border: none;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0.5rem;
-  position: relative;
-}
-
-.linkButton::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #cba258;
-  transition: width 0.3s ease;
-}
-
-.linkButton:hover::after {
-  width: 100%;
-}
-
-.logoContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .logo {
   height: 40px;
-  width: auto;
-  object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-normal);
+  margin-right: var(--space-sm);
 }
 
 .logo:hover {
   transform: rotate(-5deg);
 }
 
+.star {
+  color: var(--gold);
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
 .linkButton {
   background: transparent;
-  color: white;
+  color: inherit;
   border: none;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--space-sm);
   position: relative;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  transition: color var(--transition-normal);
+}
+
+.linkButton:hover {
+  color: var(--gold);
 }
 
 .linkButton::after {
@@ -132,10 +75,45 @@
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #cba258;
-  transition: width 0.3s ease;
+  background-color: var(--gold);
+  transition: width var(--transition-normal);
 }
 
 .linkButton:hover::after {
   width: 100%;
+}
+
+.button {
+  background-color: var(--gold);
+  color: var(--dark-green);
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.button:hover {
+  background-color: color-mix(in srgb, var(--gold), white 10%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform var(--transition-fast);
+}
+
+.linkButton:hover .icon {
+  transform: translateY(-1px);
+}
+
+.button:hover .icon {
+  transform: translateY(-1px) scale(1.05);
 }
