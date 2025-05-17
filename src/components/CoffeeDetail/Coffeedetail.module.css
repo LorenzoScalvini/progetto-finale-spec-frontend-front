@@ -1,57 +1,58 @@
+/* CoffeeDetail.module.css */
 .container {
   max-width: 56rem;
   margin: 0 auto;
-  padding: 2rem;
-  background-color: #f9f9f7;
+  padding: var(--space-xl);
+  background-color: var(--light-bg);
   min-height: calc(100vh - 80px);
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn var(--transition-slow);
 }
 
 .backButton {
-  padding: 0.75rem 1.5rem;
-  background-color: #006241;
-  color: white;
-  border-radius: 50px;
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--primary-green);
+  color: var(--white);
+  border-radius: var(--radius-full);
   font-weight: 600;
-  transition: all 0.3s ease;
-  margin-bottom: 2rem;
+  transition: all var(--transition-normal);
+  margin-bottom: var(--space-xl);
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: var(--space-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 .backButton:hover {
-  background-color: #004d33;
+  background-color: color-mix(in srgb, var(--primary-green), black 10%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .coffeeHeader {
-  margin-bottom: 2rem;
-  animation: slideUp 0.5s ease-out;
+  margin-bottom: var(--space-xl);
+  animation: slideUp var(--transition-normal);
 }
 
 .title {
   font-size: 2.25rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #006241;
+  margin-bottom: var(--space-sm);
+  color: var(--primary-green);
 }
 
 .coffeeCard {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  background-color: var(--white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   animation: slideUp 0.5s 0.1s ease-out both;
 }
 
 .imageWrapper {
-  margin-bottom: 2rem;
-  border-radius: 12px;
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   position: relative;
 }
@@ -62,7 +63,7 @@
   max-height: 500px;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
+  transition: transform var(--transition-slow);
 }
 
 .imageWrapper:hover .coffeeImage {
@@ -72,107 +73,97 @@
 .detailsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .detailItem {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 1rem;
-  background-color: rgba(203, 162, 88, 0.05);
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background-color: var(--light-gold);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
 }
 
 .detailItem:hover {
-  background-color: rgba(203, 162, 88, 0.1);
+  background-color: color-mix(in srgb, var(--light-gold), transparent 50%);
   transform: translateY(-2px);
 }
 
 .detailLabel {
   font-weight: 600;
-  color: #006241;
+  color: var(--primary-green);
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .detailValue {
-  color: #2b2b2b;
+  color: var(--dark-gray);
   font-size: 1rem;
   font-weight: 500;
 }
 
 .organicBadge {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: rgba(203, 162, 88, 0.1);
-  color: #cba258;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--light-gold);
+  color: var(--gold);
   font-weight: 600;
-  border-radius: 50px;
+  border-radius: var(--radius-full);
   font-size: 0.875rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
   animation: pulse 2s infinite;
 }
 
 .description {
-  padding-top: 2rem;
-  border-top: 1px solid #e8e8e8;
-  margin-top: 2rem;
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--light-gray);
+  margin-top: var(--space-xl);
 }
 
 .descriptionTitle {
-  color: #006241;
+  color: var(--primary-green);
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
   font-weight: 600;
 }
 
 .description p {
   line-height: 1.8;
-  color: #333;
+  color: var(--dark-gray);
   font-size: 1.05rem;
 }
 
 .metaData {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e8e8e8;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--light-gray);
   font-size: 0.75rem;
-  color: #777;
+  color: var(--medium-gray);
   display: flex;
   justify-content: space-between;
 }
 
-.loadingSpinner {
-  border: 4px solid rgba(0, 98, 65, 0.1);
-  border-top: 4px solid #006241;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin: 4rem auto;
-}
-
 .errorAlert {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 12px;
+  background-color: var(--white);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  animation: fadeIn 0.5s ease-out;
+  box-shadow: var(--shadow-md);
+  animation: fadeIn var(--transition-slow);
 }
 
 .errorAlert h3 {
-  color: #006241;
-  margin-bottom: 1rem;
+  color: var(--primary-green);
+  margin-bottom: var(--space-md);
   font-size: 1.5rem;
 }
 
 .errorAlert p {
-  margin-bottom: 1.5rem;
-  color: #555;
+  margin-bottom: var(--space-lg);
+  color: var(--medium-gray);
   font-size: 1.05rem;
 }

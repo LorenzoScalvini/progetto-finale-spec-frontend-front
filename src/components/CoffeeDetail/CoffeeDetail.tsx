@@ -1,7 +1,27 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { CoffeeDetails} from '../../types/coffee';
 import styles from './CoffeeDetail.module.css';
+
+  type Coffee = {
+  id: number;
+  title: string;
+  category: string;
+  origin: string;
+  roastLevel: string;
+  flavor: string[];
+  acidity: number;
+  body: number;
+  price: number;
+  packaging: string;
+  organic: boolean;
+  description: string;
+  imageUrl?: string;
+};
+  type CoffeeDetails = Coffee & {
+    formattedPrice: string;
+    flavorList: string;
+    formattedDate: (dateString: string) => string;
+  };
 
 export default function CoffeeDetail() {
   const { id } = useParams<{ id: string }>();
