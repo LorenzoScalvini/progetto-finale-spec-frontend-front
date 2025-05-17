@@ -1,52 +1,59 @@
+/* CoffeeComparison.module.css */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  background-color: #f9f9f7;
+  padding: var(--space-xl);
+  background-color: var(--light-bg);
   min-height: calc(100vh - 80px);
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn var(--transition-slow);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-xl);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .header h1 {
-  color: #1e3932;
+  color: var(--dark-green);
   font-size: 2rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .actions {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-md);
   flex-wrap: wrap;
 }
 
 .actions button {
-  padding: 0.6rem 1.5rem;
+  padding: var(--space-sm) var(--space-lg);
   border: none;
-  border-radius: 25px;
-  background-color: #006241;
-  color: white;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-green);
+  color: var(--white);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .actions button:hover {
-  background-color: #004d33;
+  background-color: color-mix(in srgb, var(--primary-green), black 10%);
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .actions button:disabled {
-  background-color: #a0aec0;
+  background-color: var(--medium-gray);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -55,164 +62,196 @@
 .selectorContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-  animation: slideUp 0.5s ease-out;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  animation: slideUp var(--transition-normal);
 }
 
 .selector {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .selector label {
   font-weight: 600;
-  color: #1e3932;
+  color: var(--dark-green);
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .selector select {
-  padding: 0.6rem 1rem;
-  border: 2px solid #1e3932;
-  border-radius: 25px;
+  padding: var(--space-sm) var(--space-md);
+  border: 2px solid var(--dark-green);
+  border-radius: var(--radius-full);
   font-size: 1rem;
-  background-color: white;
-  color: #1e3932;
+  background-color: var(--white);
+  color: var(--dark-green);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
 }
 
 .selector select:hover {
-  border-color: #cba258;
+  border-color: var(--gold);
 }
 
 .loadingIndicator {
-  color: #1e3932;
+  color: var(--dark-green);
   font-size: 1rem;
   text-align: center;
-  margin: 2rem 0;
+  margin: var(--space-xl) 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .error {
-  color: #e53e3e;
+  color: var(--error-red);
   font-size: 1rem;
   text-align: center;
-  margin: 2rem 0;
+  margin: var(--space-xl) 0;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .comparison {
-  margin-top: 2rem;
+  margin-top: var(--space-xl);
   animation: slideUp 0.5s 0.1s ease-out both;
 }
 
 .comparisonGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 3rem;
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  gap: var(--space-md);
+  margin-bottom: var(--space-xxl);
+  background-color: var(--white);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .gridHeader {
   font-weight: 700;
-  padding: 1rem;
-  background-color: #f4f1ee;
-  border-radius: 8px;
-  color: #1e3932;
+  padding: var(--space-md);
+  background-color: color-mix(in srgb, var(--light-bg), transparent 20%);
+  border-radius: var(--radius-md);
+  color: var(--dark-green);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
 }
 
 .propertyLabel {
   font-weight: 600;
-  padding: 1rem;
-  color: #1e3932;
-  background-color: #f9f9f7;
-  border-radius: 8px;
+  padding: var(--space-md);
+  color: var(--dark-green);
+  background-color: var(--light-bg);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .higher {
-  color: #38a169;
+  color: var(--success-green);
   font-weight: 600;
   background-color: rgba(56, 161, 105, 0.1);
-  padding: 0.5rem;
-  border-radius: 6px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
 }
 
 .lower {
-  color: #e53e3e;
+  color: var(--error-red);
   font-weight: 600;
   background-color: rgba(229, 62, 62, 0.1);
-  padding: 0.5rem;
-  border-radius: 6px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
 }
 
 .equal {
-  color: #006241;
+  color: var(--primary-green);
   font-weight: 600;
   background-color: rgba(0, 98, 65, 0.1);
-  padding: 0.5rem;
-  border-radius: 6px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
 }
 
 .different {
-  color: #cba258;
+  color: var(--gold);
   font-weight: 600;
-  background-color: rgba(203, 162, 88, 0.1);
-  padding: 0.5rem;
-  border-radius: 6px;
+  background-color: var(--light-gold);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
 }
 
 .visualComparison {
-  margin-top: 3rem;
+  margin-top: var(--space-xxl);
   animation: slideUp 0.5s 0.2s ease-out both;
 }
 
 .visualComparison h3 {
   font-size: 1.75rem;
-  color: #1e3932;
-  margin-bottom: 1.5rem;
+  color: var(--dark-green);
+  margin-bottom: var(--space-lg);
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .coffeeCards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
+  gap: var(--space-xl);
 }
 
 .coffeeCard {
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  background-color: white;
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  background-color: var(--white);
+  transition: all var(--transition-normal);
 }
 
 .coffeeCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  border-color: #cba258;
+  box-shadow: var(--shadow-md);
+  border-color: var(--gold);
 }
 
 .coffeeCard img {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform var(--transition-slow);
 }
 
 .coffeeCard:hover img {
@@ -220,34 +259,24 @@
 }
 
 .coffeeCard h4 {
-  padding: 1.25rem 1.25rem 0.5rem;
+  padding: var(--space-lg) var(--space-lg) var(--space-sm);
   font-size: 1.25rem;
-  color: #1e3932;
+  color: var(--dark-green);
   font-weight: 600;
 }
 
 .coffeeCard p {
-  padding: 0 1.25rem 1.25rem;
-  color: #4a5568;
+  padding: 0 var(--space-lg) var(--space-lg);
+  color: var(--medium-gray);
   line-height: 1.6;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+@media (max-width: 768px) {
+  .comparisonGrid {
+    grid-template-columns: 1fr;
   }
-  to {
-    opacity: 1;
-  }
-}
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .selectorContainer {
+    grid-template-columns: 1fr;
   }
 }

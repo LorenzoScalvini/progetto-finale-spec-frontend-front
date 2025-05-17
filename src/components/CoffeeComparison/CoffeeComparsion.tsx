@@ -1,5 +1,17 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  HomeIcon,
+  ArrowPathIcon,
+  ScaleIcon,
+  TrophyIcon,
+  ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowsRightLeftIcon,
+  SparklesIcon,
+  ClockIcon,
+  ExclamationTriangleIcon
+} from '@heroicons/react/24/outline';
 import styles from './CoffeeComparison.module.css';
 
 type Coffee = {
@@ -22,6 +34,7 @@ type ComparisonItem = {
   label: string;
   value: (coffee: Coffee) => string | number;
   isNumeric?: boolean;
+  icon: React.ReactNode;
 };
 
 export default function CoffeeComparison() {
@@ -89,24 +102,59 @@ export default function CoffeeComparison() {
 
   const resetComparison = () => setCoffees([null, null]);
 
-  // Comparison configuration
+  // Comparison configuration with icons
   const comparisonItems: ComparisonItem[] = [
-    { label: 'Category', value: c => c.category },
-    { label: 'Origin', value: c => c.origin },
-    { label: 'Roast Level', value: c => c.roastLevel },
-    { label: 'Flavor Profile', value: c => c.flavor.join(', ') },
-    { label: 'Acidity', value: c => `${c.acidity}/10`, isNumeric: true },
-    { label: 'Body', value: c => `${c.body}/10`, isNumeric: true },
+    { 
+      label: 'Category', 
+      value: c => c.category,
+      icon: <ScaleIcon className="icon" width={18} /> 
+    },
+    { 
+      label: 'Origin', 
+      value: c => c.origin,
+      icon: <SparklesIcon className="icon" width={18} /> 
+    },
+    { 
+      label: 'Roast Level', 
+      value: c => c.roastLevel,
+      icon: <ClockIcon className="icon" width={18} /> 
+    },
+    { 
+      label: 'Flavor Profile', 
+      value: c => c.flavor.join(', '),
+      icon: <TrophyIcon className="icon" width={18} /> 
+    },
+    { 
+      label: 'Acidity', 
+      value: c => `${c.acidity}/10`, 
+      isNumeric: true,
+      icon: <ArrowTrendingUpIcon className="icon" width={18} /> 
+    },
+    { 
+      label: 'Body', 
+      value: c => `${c.body}/10`, 
+      isNumeric: true,
+      icon: <ArrowTrendingDownIcon className="icon" width={18} /> 
+    },
     { 
       label: 'Price', 
       value: c => new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
       }).format(c.price),
-      isNumeric: true
+      isNumeric: true,
+      icon: <ScaleIcon className="icon" width={18} /> 
     },
-    { label: 'Packaging', value: c => c.packaging },
-    { label: 'Organic', value: c => c.organic ? 'Yes' : 'No' }
+    { 
+      label: 'Packaging', 
+      value: c => c.packaging,
+      icon: <SparklesIcon className="icon" width={18} /> 
+    },
+    { 
+      label: 'Organic', 
+      value: c => c.organic ? 'Yes' : 'No',
+      icon: <TrophyIcon className="icon" width={18} /> 
+    }
   ];
 
   // Comparison result logic
@@ -124,16 +172,37 @@ export default function CoffeeComparison() {
     return valA === valB ? 'equal' : 'different';
   };
 
+  // Get appropriate icon for comparison result
+  const getResultIcon = (result: string) => {
+    switch(result) {
+      case 'higher':
+        return <ArrowTrendingUpIcon width={16} />;
+      case 'lower':
+        return <ArrowTrendingDownIcon width={16} />;
+      case 'equal':
+        return <ArrowsRightLeftIcon width={16} />;
+      default:
+        return <SparklesIcon width={16} />;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1>Coffee Comparison</h1>
+        <h1>
+          <ScaleIcon width={24} />
+          Coffee Comparison
+        </h1>
         <div className={styles.actions}>
-          <button onClick={() => navigate('/')}>← Back to Menu</button>
+          <button onClick={() => navigate('/')}>
+            <HomeIcon width={18} />
+            Back to Menu
+          </button>
           <button 
             onClick={resetComparison}
             disabled={!coffees[0] && !coffees[1]}
           >
+            <ArrowPathIcon width={18} />
             Reset
           </button>
         </div>
@@ -142,7 +211,10 @@ export default function CoffeeComparison() {
       <div className={styles.selectorContainer}>
         {(['first', 'second'] as const).map(position => (
           <div key={position} className={styles.selector}>
-            <label>{position === 'first' ? 'First' : 'Second'} Coffee</label>
+            <label>
+              <TrophyIcon width={18} />
+              {position === 'first' ? 'First' : 'Second'} Coffee
+            </label>
             <select
               value={coffees[position === 'first' ? 0 : 1]?.id || ''}
               onChange={e => handleSelect(position, e.target.value)}
@@ -155,8 +227,18 @@ export default function CoffeeComparison() {
                 </option>
               ))}
             </select>
-            {loading[position] && <span className={styles.loadingIndicator}>Loading...</span>}
-            {error[position] && <span className={styles.error}>{error[position]}</span>}
+            {loading[position] && (
+              <span className={styles.loadingIndicator}>
+                <ClockIcon width={16} />
+                Loading...
+              </span>
+            )}
+            {error[position] && (
+              <span className={styles.error}>
+                <ExclamationTriangleIcon width={16} />
+                {error[position]}
+              </span>
+            )}
           </div>
         ))}
       </div>
@@ -164,26 +246,47 @@ export default function CoffeeComparison() {
       {coffees[0] && coffees[1] && (
         <div className={styles.comparison}>
           <div className={styles.comparisonGrid}>
-            <div className={styles.gridHeader}>Property</div>
-            <div className={styles.gridHeader}>{coffees[0].title}</div>
-            <div className={styles.gridHeader}>Comparison</div>
-            <div className={styles.gridHeader}>{coffees[1].title}</div>
+            <div className={styles.gridHeader}>
+              <ScaleIcon width={18} />
+              Property
+            </div>
+            <div className={styles.gridHeader}>
+              <TrophyIcon width={18} />
+              {coffees[0].title}
+            </div>
+            <div className={styles.gridHeader}>
+              <ArrowsRightLeftIcon width={18} />
+              Comparison
+            </div>
+            <div className={styles.gridHeader}>
+              <TrophyIcon width={18} />
+              {coffees[1].title}
+            </div>
 
-            {comparisonItems.map(item => {
+            {comparisonItems.map((item, index) => {
               const result = getComparisonResult(coffees[0]!, coffees[1]!, item);
               return (
-                <>
-                  <div className={styles.propertyLabel}>{item.label}</div>
+                <React.Fragment key={index}>
+                  <div className={styles.propertyLabel}>
+                    {item.icon}
+                    {item.label}
+                  </div>
                   <div>{item.value(coffees[0]!)}</div>
-                  <div className={styles[result]}>{result}</div>
+                  <div className={styles[result]}>
+                    {getResultIcon(result)}
+                    {result}
+                  </div>
                   <div>{item.value(coffees[1]!)}</div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
 
           <div className={styles.visualComparison}>
-            <h3>Visual Comparison</h3>
+            <h3>
+              <SparklesIcon width={24} />
+              Visual Comparison
+            </h3>
             <div className={styles.coffeeCards}>
               {coffees.map((coffee, i) => (
                 <div key={i} className={styles.coffeeCard}>
