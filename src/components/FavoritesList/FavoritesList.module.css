@@ -1,0 +1,68 @@
+/* FavoritesList.module.css */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+}
+
+.header {
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  color: var(--dark-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.heartIcon {
+  color: var(--error-red);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.resultsInfo {
+  color: var(--medium-gray);
+  font-style: italic;
+  margin-bottom: var(--space-md);
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--space-xxl);
+  color: var(--medium-gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.emptyIcon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--error-red);
+}
+
+.browseButton {
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--error-red);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: var(--space-md);
+  transition: background-color var(--transition-normal);
+}
+
+.browseButton:hover {
+  background-color: color-mix(in srgb, var(--error-red), black 10%);
+}
