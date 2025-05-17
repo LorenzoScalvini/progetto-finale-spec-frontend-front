@@ -5,6 +5,9 @@ import ComparatorPage from './pages/ComparatorPage'
 import ScrollToTop from './components/ScrollToTop/ScrollToTop'
 import Navbar from './components/Navbar/Navbar'
 import './App.css';
+import CoffeeFav from './pages/CoffeeFav'
+import Footer from './components/Footer/Footer'
+
 
 function App() {
   return (
@@ -14,7 +17,9 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/coffees/:id" element={<CoffeePage />} />
       <Route path="/coffeecomparator" element={<ComparatorPage />} />
+      <Route path="/favorites" element={<CoffeeFav />} />
     </Routes>
+    <Footer />
     <ScrollToTop />
     </>
   )

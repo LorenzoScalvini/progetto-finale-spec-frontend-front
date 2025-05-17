@@ -1,0 +1,151 @@
+/* Footer.module.css */
+.footer {
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: var(--space-xxl) 0 var(--space-md);
+  margin-top: var(--space-xxl);
+}
+
+.footerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+.footerTop {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.footerAbout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.footerHeading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  color: var(--gold);
+}
+
+.footerText {
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.socialLinks {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all var(--transition-normal);
+}
+
+.socialLink:hover {
+  background-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.socialIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--white);
+}
+
+.linkList,
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.linkItem,
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  line-height: 1.5;
+}
+
+.linkIcon,
+.contactIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.link {
+  color: var(--white);
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+.link:hover {
+  color: var(--gold);
+}
+
+.footerBottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
+  text-align: center;
+}
+
+.copyright {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.legalLink {
+  color: var(--white);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+.legalLink:hover {
+  color: var(--gold);
+}
+
+@media (min-width: 768px) {
+  .footerBottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerTop {
+    grid-template-columns: 1fr;
+  }
+
+  .legalLinks {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+}
