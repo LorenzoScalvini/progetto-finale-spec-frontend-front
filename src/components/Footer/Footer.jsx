@@ -21,13 +21,13 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
-        {/* Top Section */}
+        {/* Sezione Superiore */}
         <div className={styles.footerTop}>
           <div className={styles.footerAbout}>
-            <h3 className={styles.footerHeading}>About Us</h3>
+            <h3 className={styles.footerHeading}>Chi Siamo</h3>
             <p className={styles.footerText}>
-              Since 1971, Starbucks has been committed to ethically sourcing and
-              roasting high-quality arabica coffee.
+              Dal 1971, Starbucks si impegna nell'approvvigionamento etico e
+              nella tostatura di caffè arabica di alta qualità.
             </p>
             <div className={styles.socialLinks}>
               <a href="#" className={styles.socialLink} aria-label="Facebook">
@@ -42,9 +42,9 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Link Rapidi */}
           <div className={styles.footerLinks}>
-            <h3 className={styles.footerHeading}>Quick Links</h3>
+            <h3 className={styles.footerHeading}>Link Utili</h3>
             <ul className={styles.linkList}>
               <li className={styles.linkItem}>
                 <HomeIcon className={styles.linkIcon} />
@@ -55,31 +55,31 @@ const Footer = () => {
               <li className={styles.linkItem}>
                 <HeartIcon className={styles.linkIcon} />
                 <a href="#" className={styles.link}>
-                  Rewards
+                  Ricompense
                 </a>
               </li>
               <li className={styles.linkItem}>
                 <ScaleIcon className={styles.linkIcon} />
                 <a href="#" className={styles.link}>
-                  Responsibility
+                  Responsabilità
                 </a>
               </li>
               <li className={styles.linkItem}>
                 <ShoppingBagIcon className={styles.linkIcon} />
                 <a href="#" className={styles.link}>
-                  Products
+                  Prodotti
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contatti */}
           <div className={styles.footerContact}>
-            <h3 className={styles.footerHeading}>Contact Us</h3>
+            <h3 className={styles.footerHeading}>Contattaci</h3>
             <ul className={styles.contactList}>
               <li className={styles.contactItem}>
                 <MapPinIcon className={styles.contactIcon} />
-                <span>123 Coffee Street, Seattle, WA</span>
+                <span>Via del Caffè 123, Seattle, WA</span>
               </li>
               <li className={styles.contactItem}>
                 <PhoneIcon className={styles.contactIcon} />
@@ -87,34 +87,34 @@ const Footer = () => {
               </li>
               <li className={styles.contactItem}>
                 <EnvelopeIcon className={styles.contactIcon} />
-                <span>customerservice@starbucks.com</span>
+                <span>servizioclienti@starbucks.com</span>
               </li>
               <li className={styles.contactItem}>
                 <ClockIcon className={styles.contactIcon} />
-                <span>Mon-Fri: 6AM - 9PM</span>
+                <span>Lun-Ven: 6:00 - 21:00</span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Sezione Inferiore */}
         <div className={styles.footerBottom}>
           <div className={styles.copyright}>
-            &copy; {new Date().getFullYear()} Starbucks Coffee Company. All
-            rights reserved.
+            &copy; {new Date().getFullYear()} Starbucks Coffee Company. Tutti i
+            diritti riservati.
           </div>
           <div className={styles.legalLinks}>
             <a href="#" className={styles.legalLink}>
-              Privacy Policy
+              Informativa sulla privacy
             </a>
             <a href="#" className={styles.legalLink}>
-              Terms of Use
+              Termini di utilizzo
             </a>
             <a href="#" className={styles.legalLink}>
-              CA Supply Chain Act
+              California Supply Chain Act
             </a>
             <a href="#" className={styles.legalLink}>
-              Cookie Preferences
+              Preferenze cookie
             </a>
           </div>
         </div>

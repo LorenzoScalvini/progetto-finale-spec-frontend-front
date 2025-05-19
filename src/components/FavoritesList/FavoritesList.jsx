@@ -19,10 +19,10 @@ export default function FavoritesList() {
     const fetchCoffees = async () => {
       try {
         const response = await fetch("http://localhost:3001/coffees");
-        if (!response.ok) throw new Error("Failed to fetch coffees");
+        if (!response.ok) throw new Error("Impossibile recuperare i caffè");
         setCoffees(await response.json());
       } catch (error) {
-        console.error("Error fetching coffees:", error);
+        console.error("Errore durante il recupero dei caffè:", error);
       } finally {
         setIsLoading(false);
       }
@@ -50,7 +50,7 @@ export default function FavoritesList() {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
-        <p>Loading your favorite coffees...</p>
+        <p>Caricamento dei tuoi caffè preferiti...</p>
       </div>
     );
   }
@@ -59,24 +59,27 @@ export default function FavoritesList() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          <span className={styles.heartIcon}>❤️</span> My Favorite Coffees
+          <span className={styles.heartIcon}>❤️</span> I Miei Caffè Preferiti
         </h1>
       </div>
 
       {favoriteCoffees.length === 0 ? (
         <div className={styles.emptyState}>
           <HeartBroken className={styles.emptyIcon} />
-          <p>You don't have any favorite coffees yet.</p>
-          <p>Click the heart icon on coffee cards to add them here!</p>
+          <p>Non hai ancora aggiunto nessun caffè ai preferiti.</p>
+          <p>
+            Clicca sull’icona a forma di cuore nelle schede per aggiungerli!
+          </p>
           <button onClick={() => navigate("/")} className={styles.browseButton}>
-            Browse Coffees
+            Scopri i Caffè
           </button>
         </div>
       ) : (
         <>
           <div className={styles.resultsInfo}>
-            Showing {favoriteCoffees.length} favorite coffee
-            {favoriteCoffees.length !== 1 ? "s" : ""}
+            {favoriteCoffees.length} caffè preferit
+            {favoriteCoffees.length === 1 ? "o" : "i"} visualizzat
+            {favoriteCoffees.length === 1 ? "o" : "i"}
           </div>
 
           <div className={styles.grid}>
