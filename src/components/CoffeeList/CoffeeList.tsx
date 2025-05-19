@@ -4,6 +4,7 @@ import CoffeeCard from '../CoffeeCard/CoffeeCard';
 import styles from './CoffeeList.module.css';
 import { ArrowRightIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
+// 1. TIPI E INTERFACCE
 type SortBy = 'none' | 'title' | 'category';
 type SortDirection = 'asc' | 'desc';
 
@@ -24,6 +25,7 @@ type Coffee = {
 };
 
 export default function CoffeeList() {
+  // 2. STATI DEL COMPONENTE
   const [coffees, setCoffees] = useState<Coffee[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState('');
@@ -35,22 +37,23 @@ export default function CoffeeList() {
   
   const navigate = useNavigate();
 
-  // Fetch coffees and favorites on component mount
+  // 3. EFFETTI (SIDE EFFECTS)
+  // Effetto per il caricamento iniziale dei dati
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Load favorites from localStorage
+        // Carica preferiti da localStorage
         const savedFavorites = localStorage.getItem('favoriteCoffees');
         if (savedFavorites) {
           setFavorites(JSON.parse(savedFavorites));
         }
 
-        // Fetch coffees
+        // Carica lista caffè
         const response = await fetch('http://localhost:3001/coffees');
-        if (!response.ok) throw new Error('Failed to fetch coffees');
+        if (!response.ok) throw new Error('Errore nel caricamento dei caffè');
         setCoffees(await response.json());
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Errore nel caricamento dati:', error);
       } finally {
         setIsLoading(false);
       }
@@ -59,7 +62,7 @@ export default function CoffeeList() {
     fetchData();
   }, []);
 
-  // Debounce search term
+  // Effetto per il debounce del termine di ricerca
   useEffect(() => {
     const timer = setTimeout(() => {
       setDisplayedSearchTerm(searchTerm);
@@ -68,6 +71,7 @@ export default function CoffeeList() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // 4. HANDLER FUNCTIONS
   const handleCardClick = (id: number) => navigate(`/coffees/${id}`);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,14 +98,18 @@ export default function CoffeeList() {
     localStorage.setItem('favoriteCoffees', JSON.stringify(newFavorites));
   };
 
+  // 5. MEMOIZED VALUES
+  // Estrae le categorie uniche dalla lista dei caffè
   const categories = useMemo(() => ['', ...new Set(coffees.map(c => c.category))], [coffees]);
 
+  // Filtra e ordina i caffè in base ai criteri selezionati
   const filteredCoffees = useMemo(() => {
     let result = coffees.filter(c => 
       c.title.toLowerCase().includes(displayedSearchTerm.toLowerCase()) &&
       (!selectedCategory || c.category === selectedCategory)
     );
 
+    // Ordinamento
     if (sortBy === 'title') {
       result.sort((a, b) => sortDirection === 'asc' 
         ? a.title.localeCompare(b.title) 
@@ -115,68 +123,77 @@ export default function CoffeeList() {
     return result;
   }, [coffees, displayedSearchTerm, selectedCategory, sortBy, sortDirection]);
 
+  // 6. RENDER CONDIZIONALE PER LO STATO DI CARICAMENTO
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
-        <p>Loading our premium coffees...</p>
+        <p>Caricamento dei nostri caffè premium...</p>
       </div>
     );
   }
 
+  // 7. RENDER PRINCIPALE
   return (
     <div className={styles.container}>
+      {/* Intestazione con controlli */}
       <div className={styles.header}>
         <h1 className={styles.title}>
-          <span className={styles.starbucksStar}>★</span> Our Coffee Collection
+          <span className={styles.starbucksStar}>★</span> La Nostra Collezione di Caffè
         </h1>
         
         <div className={styles.controls}>
+          {/* Barra di ricerca */}
           <div className={styles.searchContainer}>
             <MagnifyingGlassIcon className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Find your perfect coffee..."
+              placeholder="Trova il tuo caffè perfetto..."
               value={searchTerm}
               onChange={handleSearchChange}
               className={styles.searchInput}
             />
           </div>
           
+          {/* Selezione categoria */}
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
             className={styles.categorySelect}
           >
-            <option value="">All Categories</option>
+            <option value="">Tutte le Categorie</option>
             {categories.slice(1).map(category => (
               <option key={category} value={category}>{category}</option>
             ))}
           </select>
 
+          {/* Pulsante ordinamento */}
           <button 
             onClick={toggleAlphabeticalSort}
             className={`${styles.sortButton} ${sortBy === 'title' ? styles.active : ''}`}
           >
-            {sortBy === 'title' ? (sortDirection === 'asc' ? 'A-Z ↓' : 'Z-A ↑') : 'Sort A-Z'}
+            {sortBy === 'title' ? (sortDirection === 'asc' ? 'A-Z ↓' : 'Z-A ↑') : 'Ordina A-Z'}
           </button>
 
+          {/* Pulsante preferiti */}
           <button 
             onClick={() => navigate('/favorites')}
             className={styles.favoritesButton}
           >
-            <span className={styles.favoritesText}>My Favorites</span>
+            <span className={styles.favoritesText}>I Miei Preferiti</span>
             <ArrowRightIcon className={styles.favoritesIcon} />
           </button>
         </div>
       </div>
 
+      {/* Informazioni sui risultati */}
       <div className={styles.resultsInfo}>
-        Showing {filteredCoffees.length} of {coffees.length} premium selections
-        {sortBy === 'category' && selectedCategory && ` (sorted by category)`}
-        {favorites.length > 0 && ` • ${favorites.length} in favorites`}
+        Mostrati {filteredCoffees.length} di {coffees.length} selezioni premium
+        {sortBy === 'category' && selectedCategory && ` (ordinati per categoria)`}
+        {favorites.length > 0 && ` • ${favorites.length} nei preferiti`}
       </div>
 
+      {/* Griglia dei caffè */}
       <div className={styles.grid}>
         {filteredCoffees.map(coffee => (
           <CoffeeCard 
@@ -189,9 +206,10 @@ export default function CoffeeList() {
         ))}
       </div>
 
+      {/* Messaggio per nessun risultato */}
       {filteredCoffees.length === 0 && (
         <div className={styles.noResults}>
-          No coffees found. Try a different search.
+          Nessun caffè trovato. Prova con un'altra ricerca.
         </div>
       )}
     </div>

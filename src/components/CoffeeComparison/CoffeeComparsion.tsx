@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   HomeIcon,
@@ -14,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 import styles from './CoffeeComparison.module.css';
 
+// 1. TIPI E INTERFACCE
 type Coffee = {
   id: number;
   title: string;
@@ -37,23 +38,37 @@ type ComparisonItem = {
   icon: React.ReactNode;
 };
 
+type LoadingState = {
+  all: boolean;
+  first: boolean;
+  second: boolean;
+};
+
+type ErrorState = {
+  first?: string;
+  second?: string;
+};
+
 export default function CoffeeComparison() {
   const navigate = useNavigate();
+  
+  // 2. STATI DEL COMPONENTE
   const [coffees, setCoffees] = useState<[Coffee | null, Coffee | null]>([null, null]);
   const [allCoffees, setAllCoffees] = useState<{id: number, title: string}[]>([]);
-  const [loading, setLoading] = useState({ all: true, first: false, second: false });
-  const [error, setError] = useState<{ first?: string, second?: string }>({});
+  const [loading, setLoading] = useState<LoadingState>({ all: true, first: false, second: false });
+  const [error, setError] = useState<ErrorState>({});
 
-  // Fetch all available coffees for dropdown
+  // 3. EFFETTI (SIDE EFFECTS)
+  // Carica la lista dei caffè disponibili per i dropdown
   useEffect(() => {
     const fetchCoffees = async () => {
       try {
         const response = await fetch('http://localhost:3001/coffees');
-        if (!response.ok) throw new Error('Failed to fetch coffees');
+        if (!response.ok) throw new Error('Errore nel caricamento dei caffè');
         const data = await response.json();
-        setAllCoffees(data.map((c: any) => ({ id: c.id, title: c.title })));
+        setAllCoffees(data.map((c: Coffee) => ({ id: c.id, title: c.title })));
       } catch (err) {
-        console.error('Fetch error:', err);
+        console.error('Errore nel fetch:', err);
       } finally {
         setLoading(prev => ({ ...prev, all: false }));
       }
@@ -61,7 +76,8 @@ export default function CoffeeComparison() {
     fetchCoffees();
   }, []);
 
-  // Fetch details for a specific coffee
+  // 4. FUNZIONI PRINCIPALI
+  // Carica i dettagli di un caffè specifico
   const fetchCoffee = async (id: number, position: 'first' | 'second') => {
     if (!id) return;
     
@@ -70,7 +86,7 @@ export default function CoffeeComparison() {
 
     try {
       const response = await fetch(`http://localhost:3001/coffees/${id}`);
-      if (!response.ok) throw new Error('Coffee not found');
+      if (!response.ok) throw new Error('Caffè non trovato');
       
       const data = await response.json();
       const coffee = data.success ? data.coffee : data;
@@ -83,13 +99,14 @@ export default function CoffeeComparison() {
     } catch (err) {
       setError(prev => ({ 
         ...prev, 
-        [position]: err instanceof Error ? err.message : 'Unknown error' 
+        [position]: err instanceof Error ? err.message : 'Errore sconosciuto' 
       }));
     } finally {
       setLoading(prev => ({ ...prev, [position]: false }));
     }
   };
 
+  // Gestisce la selezione di un caffè dal dropdown
   const handleSelect = (position: 'first' | 'second', id: string) => {
     const numId = id ? parseInt(id) : null;
     setCoffees(prev => {
@@ -102,62 +119,62 @@ export default function CoffeeComparison() {
 
   const resetComparison = () => setCoffees([null, null]);
 
-  // Comparison configuration with icons
-  const comparisonItems: ComparisonItem[] = [
+  // 5. CONFIGURAZIONE COMPARAZIONE (MEMOIZZATA)
+  const comparisonItems: ComparisonItem[] = useMemo(() => [
     { 
-      label: 'Category', 
+      label: 'Categoria', 
       value: c => c.category,
       icon: <ScaleIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Origin', 
+      label: 'Origine', 
       value: c => c.origin,
       icon: <SparklesIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Roast Level', 
+      label: 'Livello di tostatura', 
       value: c => c.roastLevel,
       icon: <ClockIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Flavor Profile', 
+      label: 'Profilo aromatico', 
       value: c => c.flavor.join(', '),
       icon: <TrophyIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Acidity', 
+      label: 'Acidità', 
       value: c => `${c.acidity}/10`, 
       isNumeric: true,
       icon: <ArrowTrendingUpIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Body', 
+      label: 'Corpo', 
       value: c => `${c.body}/10`, 
       isNumeric: true,
       icon: <ArrowTrendingDownIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Price', 
-      value: c => new Intl.NumberFormat('en-US', {
+      label: 'Prezzo', 
+      value: c => new Intl.NumberFormat('it-IT', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'EUR'
       }).format(c.price),
       isNumeric: true,
       icon: <ScaleIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Packaging', 
+      label: 'Confezione', 
       value: c => c.packaging,
       icon: <SparklesIcon className="icon" width={18} /> 
     },
     { 
-      label: 'Organic', 
-      value: c => c.organic ? 'Yes' : 'No',
+      label: 'Biologico', 
+      value: c => c.organic ? 'Sì' : 'No',
       icon: <TrophyIcon className="icon" width={18} /> 
     }
-  ];
+  ], []);
 
-  // Comparison result logic
+  // 6. LOGICA DI COMPARAZIONE
   const getComparisonResult = (a: Coffee, b: Coffee, item: ComparisonItem) => {
     const valA = item.value(a);
     const valB = item.value(b);
@@ -172,7 +189,7 @@ export default function CoffeeComparison() {
     return valA === valB ? 'equal' : 'different';
   };
 
-  // Get appropriate icon for comparison result
+  // Restituisce l'icona appropriata per il risultato
   const getResultIcon = (result: string) => {
     switch(result) {
       case 'higher':
@@ -186,41 +203,46 @@ export default function CoffeeComparison() {
     }
   };
 
+  // 7. RENDER PRINCIPALE
   return (
     <div className={styles.container}>
+      {/* Intestazione con azioni */}
       <header className={styles.header}>
         <h1>
           <ScaleIcon width={24} />
-          Coffee Comparison
+          Confronto Caffè
         </h1>
         <div className={styles.actions}>
           <button onClick={() => navigate('/')}>
             <HomeIcon width={18} />
-            Back to Menu
+            Torna al Menu
           </button>
           <button 
             onClick={resetComparison}
             disabled={!coffees[0] && !coffees[1]}
+            aria-label="Resetta il confronto"
           >
             <ArrowPathIcon width={18} />
-            Reset
+            Resetta
           </button>
         </div>
       </header>
 
+      {/* Selettori dei caffè da confrontare */}
       <div className={styles.selectorContainer}>
         {(['first', 'second'] as const).map(position => (
           <div key={position} className={styles.selector}>
             <label>
               <TrophyIcon width={18} />
-              {position === 'first' ? 'First' : 'Second'} Coffee
+              {position === 'first' ? 'Primo' : 'Secondo'} Caffè
             </label>
             <select
               value={coffees[position === 'first' ? 0 : 1]?.id || ''}
               onChange={e => handleSelect(position, e.target.value)}
               disabled={loading.all}
+              aria-label={`Seleziona ${position === 'first' ? 'primo' : 'secondo'} caffè`}
             >
-              <option value="">Select coffee</option>
+              <option value="">Seleziona caffè</option>
               {allCoffees.map(coffee => (
                 <option key={coffee.id} value={coffee.id}>
                   {coffee.title}
@@ -230,7 +252,7 @@ export default function CoffeeComparison() {
             {loading[position] && (
               <span className={styles.loadingIndicator}>
                 <ClockIcon width={16} />
-                Loading...
+                Caricamento...
               </span>
             )}
             {error[position] && (
@@ -243,12 +265,14 @@ export default function CoffeeComparison() {
         ))}
       </div>
 
+      {/* Risultato del confronto */}
       {coffees[0] && coffees[1] && (
         <div className={styles.comparison}>
+          {/* Griglia di confronto dettagliato */}
           <div className={styles.comparisonGrid}>
             <div className={styles.gridHeader}>
               <ScaleIcon width={18} />
-              Property
+              Proprietà
             </div>
             <div className={styles.gridHeader}>
               <TrophyIcon width={18} />
@@ -256,7 +280,7 @@ export default function CoffeeComparison() {
             </div>
             <div className={styles.gridHeader}>
               <ArrowsRightLeftIcon width={18} />
-              Comparison
+              Confronto
             </div>
             <div className={styles.gridHeader}>
               <TrophyIcon width={18} />
@@ -274,7 +298,9 @@ export default function CoffeeComparison() {
                   <div>{item.value(coffees[0]!)}</div>
                   <div className={styles[result]}>
                     {getResultIcon(result)}
-                    {result}
+                    {result === 'higher' ? 'maggiore' : 
+                     result === 'lower' ? 'minore' : 
+                     result === 'equal' ? 'uguale' : 'differente'}
                   </div>
                   <div>{item.value(coffees[1]!)}</div>
                 </React.Fragment>
@@ -282,17 +308,19 @@ export default function CoffeeComparison() {
             })}
           </div>
 
+          {/* Confronto visivo con immagini */}
           <div className={styles.visualComparison}>
             <h3>
               <SparklesIcon width={24} />
-              Visual Comparison
+              Confronto Visivo
             </h3>
             <div className={styles.coffeeCards}>
               {coffees.map((coffee, i) => (
                 <div key={i} className={styles.coffeeCard}>
                   <img 
-                    src={coffee?.imageUrl || 'https://placehold.co/300x200?text=Coffee'} 
+                    src={coffee?.imageUrl || 'https://placehold.co/300x200?text=Caffè'} 
                     alt={coffee?.title} 
+                    loading="lazy"
                   />
                   <h4>{coffee?.title}</h4>
                   <p>{coffee?.description}</p>
