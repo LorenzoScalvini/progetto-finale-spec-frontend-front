@@ -3,57 +3,48 @@ import { useNavigate } from "react-router-dom";
 import CoffeeCard from "../CoffeeCard/CoffeeCard";
 import styles from "./FavoritesList.module.css";
 import { HeartIcon as HeartBroken } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 export default function FavoritesList() {
-  const [favorites, setFavorites] = useState([]);
-  const [coffees, setCoffees] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [state, setState] = useState({
+    favorites: JSON.parse(localStorage.getItem("favoriteCoffees")) || [],
+    coffees: [],
+    isLoading: true,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const savedFavorites = localStorage.getItem("favoriteCoffees");
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-
-    const fetchCoffees = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3001/coffees");
-        if (!response.ok) throw new Error("Impossibile recuperare i caffè");
-        setCoffees(await response.json());
+        const { data } = await axios.get("http://localhost:3001/coffees");
+        setState((prev) => ({ ...prev, coffees: data, isLoading: false }));
       } catch (error) {
-        console.error("Errore durante il recupero dei caffè:", error);
-      } finally {
-        setIsLoading(false);
+        console.error("Errore:", error);
+        setState((prev) => ({ ...prev, isLoading: false }));
       }
     };
-
-    fetchCoffees();
+    fetchData();
   }, []);
 
-  const handleCardClick = (id) => navigate(`/coffees/${id}`);
-
   const handleToggleFavorite = (id) => {
-    const newFavorites = favorites.includes(id)
-      ? favorites.filter((favId) => favId !== id)
-      : [...favorites, id];
-
-    setFavorites(newFavorites);
+    const newFavorites = state.favorites.includes(id)
+      ? state.favorites.filter((favId) => favId !== id)
+      : [...state.favorites, id];
     localStorage.setItem("favoriteCoffees", JSON.stringify(newFavorites));
+    setState((prev) => ({ ...prev, favorites: newFavorites }));
   };
 
-  const favoriteCoffees = coffees.filter((coffee) =>
-    favorites.includes(coffee.id)
+  const favoriteCoffees = state.coffees.filter((coffee) =>
+    state.favorites.includes(coffee.id)
   );
 
-  if (isLoading) {
+  if (state.isLoading)
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
         <p>Caricamento dei tuoi caffè preferiti...</p>
       </div>
     );
-  }
 
   return (
     <div className={styles.container}>
@@ -63,12 +54,12 @@ export default function FavoritesList() {
         </h1>
       </div>
 
-      {favoriteCoffees.length === 0 ? (
+      {!favoriteCoffees.length ? (
         <div className={styles.emptyState}>
           <HeartBroken className={styles.emptyIcon} />
           <p>Non hai ancora aggiunto nessun caffè ai preferiti.</p>
           <p>
-            Clicca sull’icona a forma di cuore nelle schede per aggiungerli!
+            Clicca sull'icona a forma di cuore nelle schede per aggiungerli!
           </p>
           <button onClick={() => navigate("/")} className={styles.browseButton}>
             Scopri i Caffè
@@ -78,16 +69,14 @@ export default function FavoritesList() {
         <>
           <div className={styles.resultsInfo}>
             {favoriteCoffees.length} caffè preferit
-            {favoriteCoffees.length === 1 ? "o" : "i"} visualizzat
             {favoriteCoffees.length === 1 ? "o" : "i"}
           </div>
-
           <div className={styles.grid}>
             {favoriteCoffees.map((coffee) => (
               <CoffeeCard
                 key={coffee.id}
                 coffee={coffee}
-                onClick={handleCardClick}
+                onClick={() => navigate(`/coffees/${coffee.id}`)}
                 isFavorite={true}
                 onToggleFavorite={handleToggleFavorite}
               />

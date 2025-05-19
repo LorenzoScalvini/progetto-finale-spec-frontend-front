@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CoffeeCard from "../CoffeeCard/CoffeeCard";
 import styles from "./CoffeeList.module.css";
@@ -6,6 +6,7 @@ import {
   ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import axios from "axios";
 
 export default function CoffeeList() {
   const [coffees, setCoffees] = useState([]);
@@ -15,100 +16,78 @@ export default function CoffeeList() {
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState("none");
   const [sortDirection, setSortDirection] = useState("asc");
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favoriteCoffees")) || []
+  );
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getCoffees = async () => {
       try {
-        const savedFavorites = localStorage.getItem("favoriteCoffees");
-        if (savedFavorites) {
-          setFavorites(JSON.parse(savedFavorites));
-        }
-
-        const response = await fetch("http://localhost:3001/coffees");
-        if (!response.ok) throw new Error("Errore nel caricamento dei caffè");
-        setCoffees(await response.json());
+        const response = await axios.get("http://localhost:3001/coffees");
+        setCoffees(response.data);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Errore nel caricamento dati:", error);
-      } finally {
+        console.error("Error loading data:", error);
         setIsLoading(false);
       }
     };
-
-    fetchData();
+    getCoffees();
   }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setDisplayedSearchTerm(searchTerm);
     }, 300);
-
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const handleCardClick = (id) => navigate(`/coffees/${id}`);
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-    setSortBy(e.target.value ? "category" : "none");
-    setSortDirection("asc");
-  };
-
-  const toggleAlphabeticalSort = () => {
-    setSortBy("title");
-    setSortDirection((prev) =>
-      sortBy === "title" && prev === "asc" ? "desc" : "asc"
-    );
-  };
-
   const handleToggleFavorite = (id) => {
-    const newFavorites = favorites.includes(id)
-      ? favorites.filter((favId) => favId !== id)
-      : [...favorites, id];
-
-    setFavorites(newFavorites);
+    let newFavorites;
+    if (favorites.includes(id)) {
+      newFavorites = favorites.filter((favId) => favId !== id);
+    } else {
+      newFavorites = [...favorites, id];
+    }
     localStorage.setItem("favoriteCoffees", JSON.stringify(newFavorites));
+    setFavorites(newFavorites);
   };
 
-  const categories = useMemo(() => {
-    return ["", ...new Set(coffees.map((c) => c.category))];
-  }, [coffees]);
+  const categories = ["", ...new Set(coffees.map((c) => c.category))];
 
-  const filteredCoffees = useMemo(() => {
-    let result = coffees.filter(
-      (c) =>
-        c.title.toLowerCase().includes(displayedSearchTerm.toLowerCase()) &&
-        (!selectedCategory || c.category === selectedCategory)
-    );
+  let filteredCoffees = coffees.filter((c) => {
+    const matchesSearch = c.title
+      .toLowerCase()
+      .includes(displayedSearchTerm.toLowerCase());
+    const matchesCategory =
+      !selectedCategory || c.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
-    if (sortBy === "title") {
-      result.sort((a, b) =>
-        sortDirection === "asc"
-          ? a.title.localeCompare(b.title)
-          : b.title.localeCompare(a.title)
-      );
-    } else if (sortBy === "category") {
-      result.sort((a, b) =>
-        sortDirection === "asc"
-          ? a.category.localeCompare(b.category)
-          : b.category.localeCompare(a.category)
-      );
-    }
-
-    return result;
-  }, [coffees, displayedSearchTerm, selectedCategory, sortBy, sortDirection]);
+  if (sortBy === "title") {
+    filteredCoffees.sort((a, b) => {
+      if (sortDirection === "asc") {
+        return a.title.localeCompare(b.title);
+      } else {
+        return b.title.localeCompare(a.title);
+      }
+    });
+  } else if (sortBy === "category") {
+    filteredCoffees.sort((a, b) => {
+      if (sortDirection === "asc") {
+        return a.category.localeCompare(b.category);
+      } else {
+        return b.category.localeCompare(a.category);
+      }
+    });
+  }
 
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
-        <p>Caricamento dei nostri caffè premium...</p>
+        <p>Loading our premium coffees...</p>
       </div>
     );
   }
@@ -117,8 +96,7 @@ export default function CoffeeList() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          <span className={styles.starbucksStar}>★</span> La Nostra Collezione
-          di Caffè
+          <span className={styles.starbucksStar}>★</span> Our Coffee Collection
         </h1>
 
         <div className={styles.controls}>
@@ -126,19 +104,23 @@ export default function CoffeeList() {
             <MagnifyingGlassIcon className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Trova il tuo caffè perfetto..."
+              placeholder="Find your perfect coffee..."
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
             />
           </div>
 
           <select
             value={selectedCategory}
-            onChange={handleCategoryChange}
+            onChange={(e) => {
+              setSelectedCategory(e.target.value);
+              setSortBy(e.target.value ? "category" : "none");
+              setSortDirection("asc");
+            }}
             className={styles.categorySelect}
           >
-            <option value="">Tutte le Categorie</option>
+            <option value="">All Categories</option>
             {categories.slice(1).map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -147,7 +129,12 @@ export default function CoffeeList() {
           </select>
 
           <button
-            onClick={toggleAlphabeticalSort}
+            onClick={() => {
+              setSortBy("title");
+              setSortDirection(
+                sortBy === "title" && sortDirection === "asc" ? "desc" : "asc"
+              );
+            }}
             className={`${styles.sortButton} ${
               sortBy === "title" ? styles.active : ""
             }`}
@@ -156,25 +143,23 @@ export default function CoffeeList() {
               ? sortDirection === "asc"
                 ? "A-Z ↓"
                 : "Z-A ↑"
-              : "Ordina A-Z"}
+              : "Sort A-Z"}
           </button>
 
           <button
             onClick={() => navigate("/favorites")}
             className={styles.favoritesButton}
           >
-            <span className={styles.favoritesText}>I Miei Preferiti</span>
+            <span className={styles.favoritesText}>My Favorites</span>
             <ArrowRightIcon className={styles.favoritesIcon} />
           </button>
         </div>
       </div>
 
       <div className={styles.resultsInfo}>
-        Mostrati {filteredCoffees.length} di {coffees.length} selezioni premium
-        {sortBy === "category" &&
-          selectedCategory &&
-          ` (ordinati per categoria)`}
-        {favorites.length > 0 && ` • ${favorites.length} nei preferiti`}
+        Showing {filteredCoffees.length} of {coffees.length} premium selections
+        {sortBy === "category" && selectedCategory && ` (sorted by category)`}
+        {favorites.length > 0 && ` • ${favorites.length} in favorites`}
       </div>
 
       <div className={styles.grid}>
@@ -182,7 +167,7 @@ export default function CoffeeList() {
           <CoffeeCard
             key={coffee.id}
             coffee={coffee}
-            onClick={handleCardClick}
+            onClick={() => navigate(`/coffees/${coffee.id}`)}
             isFavorite={favorites.includes(coffee.id)}
             onToggleFavorite={handleToggleFavorite}
           />
@@ -191,7 +176,7 @@ export default function CoffeeList() {
 
       {filteredCoffees.length === 0 && (
         <div className={styles.noResults}>
-          Nessun caffè trovato. Prova con un'altra ricerca.
+          No coffees found. Try a different search.
         </div>
       )}
     </div>
