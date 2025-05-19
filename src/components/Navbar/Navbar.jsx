@@ -1,27 +1,19 @@
-import React from 'react';
-import styles from './Navbar.module.css';
-import { Link } from 'react-router-dom';
-import { 
+import React from "react";
+import styles from "./Navbar.module.css";
+import { Link } from "react-router-dom";
+import {
   HomeIcon,
   HeartIcon,
   ScaleIcon,
-  ShoppingBagIcon 
-} from '@heroicons/react/24/outline';
+  ShoppingBagIcon,
+} from "@heroicons/react/24/outline";
 
-interface StarbucksNavbarProps {
-  logoSrc: string;
-  brandName?: string;
-  altText?: string;
-  buttonLabel?: string;
-  onButtonClick?: () => void;
-}
-
-const Navbar: React.FC<StarbucksNavbarProps> = ({
+const Navbar = ({
   logoSrc,
-  brandName = ' STARBUCKS',
-  altText = 'Starbucks Logo',
-  buttonLabel = 'Ordina ora',
-  onButtonClick
+  brandName = " STARBUCKS",
+  altText = "Starbucks Logo",
+  buttonLabel = "Ordina ora",
+  onButtonClick,
 }) => {
   return (
     <nav className={styles.navbar}>
@@ -36,12 +28,12 @@ const Navbar: React.FC<StarbucksNavbarProps> = ({
           <HomeIcon className={styles.icon} />
           Home
         </Link>
-        
+
         <Link to="/favorites" className={styles.linkButton}>
           <HeartIcon className={styles.icon} />
           Preferiti
         </Link>
-        
+
         <Link to="/coffeecomparator" className={styles.linkButton}>
           <ScaleIcon className={styles.icon} />
           Confronta

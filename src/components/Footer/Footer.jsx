@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './Footer.module.css';
+import React from "react";
+import styles from "./Footer.module.css";
 import {
   EnvelopeIcon,
   MapPinIcon,
@@ -8,16 +8,16 @@ import {
   HomeIcon,
   HeartIcon,
   ScaleIcon,
-  ShoppingBagIcon
-} from '@heroicons/react/24/outline';
+  ShoppingBagIcon,
+} from "@heroicons/react/24/outline";
 
 import {
   FaceSmileIcon as FacebookIcon,
   ChatBubbleLeftRightIcon as TwitterIcon,
-  CameraIcon as InstagramIcon
-} from '@heroicons/react/24/outline';
+  CameraIcon as InstagramIcon,
+} from "@heroicons/react/24/outline";
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
@@ -26,7 +26,8 @@ const Footer: React.FC = () => {
           <div className={styles.footerAbout}>
             <h3 className={styles.footerHeading}>About Us</h3>
             <p className={styles.footerText}>
-              Since 1971, Starbucks has been committed to ethically sourcing and roasting high-quality arabica coffee.
+              Since 1971, Starbucks has been committed to ethically sourcing and
+              roasting high-quality arabica coffee.
             </p>
             <div className={styles.socialLinks}>
               <a href="#" className={styles.socialLink} aria-label="Facebook">
@@ -47,19 +48,27 @@ const Footer: React.FC = () => {
             <ul className={styles.linkList}>
               <li className={styles.linkItem}>
                 <HomeIcon className={styles.linkIcon} />
-                <a href="#" className={styles.link}>Home</a>
+                <a href="#" className={styles.link}>
+                  Home
+                </a>
               </li>
               <li className={styles.linkItem}>
                 <HeartIcon className={styles.linkIcon} />
-                <a href="#" className={styles.link}>Rewards</a>
+                <a href="#" className={styles.link}>
+                  Rewards
+                </a>
               </li>
               <li className={styles.linkItem}>
                 <ScaleIcon className={styles.linkIcon} />
-                <a href="#" className={styles.link}>Responsibility</a>
+                <a href="#" className={styles.link}>
+                  Responsibility
+                </a>
               </li>
               <li className={styles.linkItem}>
                 <ShoppingBagIcon className={styles.linkIcon} />
-                <a href="#" className={styles.link}>Products</a>
+                <a href="#" className={styles.link}>
+                  Products
+                </a>
               </li>
             </ul>
           </div>
@@ -91,13 +100,22 @@ const Footer: React.FC = () => {
         {/* Bottom Section */}
         <div className={styles.footerBottom}>
           <div className={styles.copyright}>
-            &copy; {new Date().getFullYear()} Starbucks Coffee Company. All rights reserved.
+            &copy; {new Date().getFullYear()} Starbucks Coffee Company. All
+            rights reserved.
           </div>
           <div className={styles.legalLinks}>
-            <a href="#" className={styles.legalLink}>Privacy Policy</a>
-            <a href="#" className={styles.legalLink}>Terms of Use</a>
-            <a href="#" className={styles.legalLink}>CA Supply Chain Act</a>
-            <a href="#" className={styles.legalLink}>Cookie Preferences</a>
+            <a href="#" className={styles.legalLink}>
+              Privacy Policy
+            </a>
+            <a href="#" className={styles.legalLink}>
+              Terms of Use
+            </a>
+            <a href="#" className={styles.legalLink}>
+              CA Supply Chain Act
+            </a>
+            <a href="#" className={styles.legalLink}>
+              Cookie Preferences
+            </a>
           </div>
         </div>
       </div>
