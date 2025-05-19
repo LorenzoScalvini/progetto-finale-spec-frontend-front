@@ -1,3 +1,4 @@
+// App.jsx
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import CoffeePage from "./pages/CoffeePage";
@@ -7,10 +8,11 @@ import Navbar from "./components/Navbar/Navbar";
 import "./App.css";
 import CoffeeFav from "./pages/CoffeeFav";
 import Footer from "./components/Footer/Footer";
+import { CoffeeProvider } from "./contexts/CoffeeContext";
 
 function App() {
   return (
-    <>
+    <CoffeeProvider>
       <Navbar logoSrc="/assets/starbucks-logo.png" />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -20,7 +22,7 @@ function App() {
       </Routes>
       <Footer />
       <ScrollToTop />
-    </>
+    </CoffeeProvider>
   );
 }
 

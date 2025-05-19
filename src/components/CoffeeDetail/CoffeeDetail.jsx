@@ -1,41 +1,30 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import styles from "./CoffeeDetail.module.css";
+import { useCoffee } from "../../contexts/CoffeeContext";
 
 export default function CoffeeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getCoffeeById } = useCoffee();
   const [coffee, setCoffee] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const getCoffee = async () => {
+    const loadCoffee = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        const response = await axios.get(`http://localhost:3001/coffees/${id}`);
-
-        const coffeeData = response.data.success
-          ? response.data.coffee
-          : response.data;
+        const coffeeData = await getCoffeeById(id);
         if (!coffeeData?.id) throw new Error("Invalid coffee data");
-
         setCoffee(coffeeData);
       } catch (err) {
-        if (err.response?.status === 404) {
-          setError("Coffee not found");
-        } else {
-          setError(err.message || "Failed to load coffee");
-        }
+        setError(err.message || "Failed to load coffee");
       } finally {
         setLoading(false);
       }
     };
-
-    getCoffee();
-  }, [id]);
+    loadCoffee();
+  }, [id, getCoffeeById]);
 
   if (loading) {
     return (

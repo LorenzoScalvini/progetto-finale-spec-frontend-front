@@ -1,50 +1,25 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CoffeeCard from "../CoffeeCard/CoffeeCard";
 import styles from "./FavoritesList.module.css";
 import { HeartIcon as HeartBroken } from "@heroicons/react/24/outline";
-import axios from "axios";
+import { useCoffee } from "../../contexts/CoffeeContext";
 
 export default function FavoritesList() {
-  const [state, setState] = useState({
-    favorites: JSON.parse(localStorage.getItem("favoriteCoffees")) || [],
-    coffees: [],
-    isLoading: true,
-  });
+  const { coffees, favorites, loading, toggleFavorite } = useCoffee();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get("http://localhost:3001/coffees");
-        setState((prev) => ({ ...prev, coffees: data, isLoading: false }));
-      } catch (error) {
-        console.error("Errore:", error);
-        setState((prev) => ({ ...prev, isLoading: false }));
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleToggleFavorite = (id) => {
-    const newFavorites = state.favorites.includes(id)
-      ? state.favorites.filter((favId) => favId !== id)
-      : [...state.favorites, id];
-    localStorage.setItem("favoriteCoffees", JSON.stringify(newFavorites));
-    setState((prev) => ({ ...prev, favorites: newFavorites }));
-  };
-
-  const favoriteCoffees = state.coffees.filter((coffee) =>
-    state.favorites.includes(coffee.id)
+  const favoriteCoffees = coffees.filter((coffee) =>
+    favorites.includes(coffee.id)
   );
 
-  if (state.isLoading)
+  if (loading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
         <p>Caricamento dei tuoi caffè preferiti...</p>
       </div>
     );
+  }
 
   return (
     <div className={styles.container}>
@@ -78,7 +53,7 @@ export default function FavoritesList() {
                 coffee={coffee}
                 onClick={() => navigate(`/coffees/${coffee.id}`)}
                 isFavorite={true}
-                onToggleFavorite={handleToggleFavorite}
+                onToggleFavorite={toggleFavorite}
               />
             ))}
           </div>

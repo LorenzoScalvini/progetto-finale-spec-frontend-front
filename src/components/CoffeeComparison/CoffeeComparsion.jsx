@@ -13,35 +13,18 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import styles from "./CoffeeComparison.module.css";
+import { useCoffee } from "../../contexts/CoffeeContext";
 
 export default function CoffeeComparison() {
   const navigate = useNavigate();
+  const { coffees: allCoffees, getCoffeeById } = useCoffee();
 
   const [coffees, setCoffees] = useState([null, null]);
-  const [allCoffees, setAllCoffees] = useState([]);
   const [loading, setLoading] = useState({
-    all: true,
     first: false,
     second: false,
   });
   const [error, setError] = useState({});
-
-  // Load available coffees for dropdowns
-  useEffect(() => {
-    const fetchCoffees = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/coffees");
-        if (!response.ok) throw new Error("Errore nel caricamento dei caffè");
-        const data = await response.json();
-        setAllCoffees(data.map((c) => ({ id: c.id, title: c.title })));
-      } catch (err) {
-        console.error("Errore nel fetch:", err);
-      } finally {
-        setLoading((prev) => ({ ...prev, all: false }));
-      }
-    };
-    fetchCoffees();
-  }, []);
 
   // Load details for a specific coffee
   const fetchCoffee = async (id, position) => {
@@ -51,12 +34,7 @@ export default function CoffeeComparison() {
     setError((prev) => ({ ...prev, [position]: undefined }));
 
     try {
-      const response = await fetch(`http://localhost:3001/coffees/${id}`);
-      if (!response.ok) throw new Error("Caffè non trovato");
-
-      const data = await response.json();
-      const coffee = data.success ? data.coffee : data;
-
+      const coffee = await getCoffeeById(id);
       setCoffees((prev) => {
         const newCoffees = [...prev];
         newCoffees[position === "first" ? 0 : 1] = coffee;
@@ -72,7 +50,6 @@ export default function CoffeeComparison() {
     }
   };
 
-  // Handle coffee selection from dropdown
   const handleSelect = (position, id) => {
     const numId = id ? parseInt(id) : null;
     setCoffees((prev) => {
@@ -179,7 +156,6 @@ export default function CoffeeComparison() {
 
   return (
     <div className={styles.container}>
-      {/* Header with actions */}
       <header className={styles.header}>
         <h1>
           <ScaleIcon width={24} />
@@ -201,7 +177,6 @@ export default function CoffeeComparison() {
         </div>
       </header>
 
-      {/* Coffee selection dropdowns */}
       <div className={styles.selectorContainer}>
         {["first", "second"].map((position) => (
           <div key={position} className={styles.selector}>
@@ -212,7 +187,6 @@ export default function CoffeeComparison() {
             <select
               value={coffees[position === "first" ? 0 : 1]?.id || ""}
               onChange={(e) => handleSelect(position, e.target.value)}
-              disabled={loading.all}
               aria-label={`Seleziona ${
                 position === "first" ? "primo" : "secondo"
               } caffè`}
@@ -240,10 +214,8 @@ export default function CoffeeComparison() {
         ))}
       </div>
 
-      {/* Comparison results */}
       {coffees[0] && coffees[1] && (
         <div className={styles.comparison}>
-          {/* Detailed comparison grid */}
           <div className={styles.comparisonGrid}>
             <div className={styles.gridHeader}>
               <ScaleIcon width={18} />
@@ -287,7 +259,6 @@ export default function CoffeeComparison() {
             })}
           </div>
 
-          {/* Visual comparison with images */}
           <div className={styles.visualComparison}>
             <h3>
               <SparklesIcon width={24} />

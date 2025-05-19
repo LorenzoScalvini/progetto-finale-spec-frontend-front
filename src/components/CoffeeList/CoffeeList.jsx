@@ -6,35 +6,16 @@ import {
   ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import axios from "axios";
+import { useCoffee } from "../../contexts/CoffeeContext";
 
 export default function CoffeeList() {
-  const [coffees, setCoffees] = useState([]);
+  const { coffees, favorites, loading, toggleFavorite } = useCoffee();
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState("none");
   const [sortDirection, setSortDirection] = useState("asc");
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favoriteCoffees")) || []
-  );
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const getCoffees = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/coffees");
-        setCoffees(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error loading data:", error);
-        setIsLoading(false);
-      }
-    };
-    getCoffees();
-  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,17 +23,6 @@ export default function CoffeeList() {
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
-
-  const handleToggleFavorite = (id) => {
-    let newFavorites;
-    if (favorites.includes(id)) {
-      newFavorites = favorites.filter((favId) => favId !== id);
-    } else {
-      newFavorites = [...favorites, id];
-    }
-    localStorage.setItem("favoriteCoffees", JSON.stringify(newFavorites));
-    setFavorites(newFavorites);
-  };
 
   const categories = ["", ...new Set(coffees.map((c) => c.category))];
 
@@ -83,7 +53,7 @@ export default function CoffeeList() {
     });
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
@@ -169,7 +139,7 @@ export default function CoffeeList() {
             coffee={coffee}
             onClick={() => navigate(`/coffees/${coffee.id}`)}
             isFavorite={favorites.includes(coffee.id)}
-            onToggleFavorite={handleToggleFavorite}
+            onToggleFavorite={toggleFavorite}
           />
         ))}
       </div>
