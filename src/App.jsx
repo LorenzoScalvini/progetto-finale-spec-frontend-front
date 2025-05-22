@@ -1,9 +1,7 @@
-// App.jsx
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import CoffeePage from "./pages/CoffeePage";
 import ComparatorPage from "./pages/ComparatorPage";
-import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import Navbar from "./components/Navbar/Navbar";
 import "./App.css";
 import CoffeeFav from "./pages/CoffeeFav";
@@ -21,7 +19,6 @@ function App() {
         <Route path="/favorites" element={<CoffeeFav />} />
       </Routes>
       <Footer />
-      <ScrollToTop />
     </CoffeeProvider>
   );
 }

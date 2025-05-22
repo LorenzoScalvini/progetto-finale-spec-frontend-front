@@ -21,7 +21,6 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
-        {/* Sezione Superiore */}
         <div className={styles.footerTop}>
           <div className={styles.footerAbout}>
             <h3 className={styles.footerHeading}>Chi Siamo</h3>
@@ -42,7 +41,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Link Rapidi */}
           <div className={styles.footerLinks}>
             <h3 className={styles.footerHeading}>Link Utili</h3>
             <ul className={styles.linkList}>
@@ -73,7 +71,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contatti */}
           <div className={styles.footerContact}>
             <h3 className={styles.footerHeading}>Contattaci</h3>
             <ul className={styles.contactList}>
@@ -97,7 +94,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Sezione Inferiore */}
         <div className={styles.footerBottom}>
           <div className={styles.copyright}>
             &copy; {new Date().getFullYear()} Starbucks Coffee Company. Tutti i
