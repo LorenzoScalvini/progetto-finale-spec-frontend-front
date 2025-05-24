@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styles from "./CoffeeDetail.module.css";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
-export default function CoffeeDetail() {
+const CoffeeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getCoffeeById } = useCoffee();
@@ -14,9 +14,9 @@ export default function CoffeeDetail() {
   useEffect(() => {
     const loadCoffee = async () => {
       try {
-        const coffeeData = await getCoffeeById(id);
-        if (!coffeeData?.id) throw new Error("Invalid coffee data");
-        setCoffee(coffeeData);
+        const data = await getCoffeeById(id);
+        if (!data?.id) throw new Error("Invalid coffee data");
+        setCoffee(data);
       } catch (err) {
         setError(err.message || "Failed to load coffee");
       } finally {
@@ -29,7 +29,7 @@ export default function CoffeeDetail() {
   if (loading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loadingSpinner}></div>
+        <div className={styles.loading}></div>
         <p>Loading coffee details...</p>
       </div>
     );
@@ -38,10 +38,10 @@ export default function CoffeeDetail() {
   if (error || !coffee) {
     return (
       <div className={styles.container}>
-        <div className={styles.errorAlert}>
+        <div className={styles.error}>
           <h3>{error ? "Error" : "Coffee Not Found"}</h3>
           <p>{error || "This coffee is not available"}</p>
-          <button onClick={() => navigate(-1)} className={styles.backButton}>
+          <button onClick={() => navigate(-1)} className={styles.button}>
             Back to Menu
           </button>
         </div>
@@ -49,32 +49,30 @@ export default function CoffeeDetail() {
     );
   }
 
-  const formattedPrice = new Intl.NumberFormat("en-US", {
+  const formatPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(coffee.price);
 
-  const flavorList = coffee.flavor.join(", ");
+  const flavors = coffee.flavor.join(", ");
 
   return (
     <div className={styles.container}>
-      <button onClick={() => navigate(-1)} className={styles.backButton}>
+      <button onClick={() => navigate(-1)} className={styles.button}>
         ← Back to Menu
       </button>
 
-      <div className={styles.coffeeHeader}>
-        <h1 className={styles.title}>Starbucks® {coffee.title}</h1>
-        {coffee.organic && (
-          <span className={styles.organicBadge}>★ Certified Organic</span>
-        )}
+      <div className={styles.header}>
+        <h1>{coffee.title}</h1>
+        {coffee.organic && <span className={styles.badge}>★ Organic</span>}
       </div>
 
-      <div className={styles.coffeeCard}>
+      <div className={styles.card}>
         <div className={styles.imageWrapper}>
           <img
-            src={coffee.imageUrl || "https://placehold.co/600x400?text=Coffee"}
+            src={coffee.imageUrl || "/placeholder.jpg"}
             alt={coffee.title}
-            className={styles.coffeeImage}
+            className={styles.image}
           />
         </div>
 
@@ -83,41 +81,43 @@ export default function CoffeeDetail() {
           <p>{coffee.description}</p>
         </div>
 
-        <div className={styles.detailsGrid}>
+        <div className={styles.details}>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Category:</span>
-            <span className={styles.detailValue}>{coffee.category}</span>
+            <span>Category:</span>
+            <span>{coffee.category}</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Origin:</span>
-            <span className={styles.detailValue}>{coffee.origin}</span>
+            <span>Origin:</span>
+            <span>{coffee.origin}</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Roast Level:</span>
-            <span className={styles.detailValue}>{coffee.roastLevel}</span>
+            <span>Roast Level:</span>
+            <span>{coffee.roastLevel}</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Flavor Profile:</span>
-            <span className={styles.detailValue}>{flavorList}</span>
+            <span>Flavor Profile:</span>
+            <span>{flavors}</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Acidity:</span>
-            <span className={styles.detailValue}>{coffee.acidity}/10</span>
+            <span>Acidity:</span>
+            <span>{coffee.acidity}/10</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Body:</span>
-            <span className={styles.detailValue}>{coffee.body}/10</span>
+            <span>Body:</span>
+            <span>{coffee.body}/10</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Price:</span>
-            <span className={styles.detailValue}>{formattedPrice}</span>
+            <span>Price:</span>
+            <span>{formatPrice}</span>
           </div>
           <div className={styles.detailItem}>
-            <span className={styles.detailLabel}>Packaging:</span>
-            <span className={styles.detailValue}>{coffee.packaging}</span>
+            <span>Packaging:</span>
+            <span>{coffee.packaging}</span>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default CoffeeDetail;

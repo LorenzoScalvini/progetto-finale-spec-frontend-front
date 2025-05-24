@@ -1,282 +1,346 @@
-/* CoffeeComparison.module.css */
+:root {
+  --primary: #006241;
+  --primary-dark: #004d33;
+  --accent: #cba328;
+  --error: #e31837;
+  --light: #f5f5f5;
+  --border: #e1e1e1;
+  --text: #333;
+  --gray: #767676;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-xl);
-  background-color: var(--light-bg);
-  min-height: calc(100vh - 80px);
-  animation: fadeIn var(--transition-slow);
+  padding: 2rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-xl);
-  flex-wrap: wrap;
-  gap: var(--space-md);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .header h1 {
-  color: var(--dark-green);
-  font-size: 2rem;
-  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0.75rem;
+  color: var(--primary);
+  font-size: 1.75rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.headerIcon {
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
 .actions {
   display: flex;
-  gap: var(--space-md);
-  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.actions button {
-  padding: var(--space-sm) var(--space-lg);
-  border: none;
-  border-radius: var(--radius-full);
-  background-color: var(--primary-green);
-  color: var(--white);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-normal);
+.button {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.actions button:hover {
-  background-color: color-mix(in srgb, var(--primary-green), black 10%);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+.button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
-.actions button:disabled {
-  background-color: var(--medium-gray);
+.button:disabled {
+  background-color: var(--gray);
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
+}
+
+.buttonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .selectorContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-xl);
-  margin-bottom: var(--space-xl);
-  animation: slideUp var(--transition-normal);
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .selector {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 0.75rem;
 }
 
 .selector label {
   font-weight: 600;
-  color: var(--dark-green);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.selectorIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.select {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  background-color: white;
+}
+
+.loading,
+.error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
+  padding: 0.5rem 0;
 }
 
-.selector select {
-  padding: var(--space-sm) var(--space-md);
-  border: 2px solid var(--dark-green);
-  border-radius: var(--radius-full);
-  font-size: 1rem;
-  background-color: var(--white);
-  color: var(--dark-green);
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.selector select:hover {
-  border-color: var(--gold);
-}
-
-.loadingIndicator {
-  color: var(--dark-green);
-  font-size: 1rem;
-  text-align: center;
-  margin: var(--space-xl) 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+.loading {
+  color: var(--gray);
 }
 
 .error {
-  color: var(--error-red);
-  font-size: 1rem;
-  text-align: center;
-  margin: var(--space-xl) 0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
+  color: var(--error);
+}
+
+.statusIcon {
+  width: 1rem;
+  height: 1rem;
 }
 
 .comparison {
-  margin-top: var(--space-xl);
-  animation: slideUp 0.5s 0.1s ease-out both;
+  margin-top: 2rem;
 }
 
 .comparisonGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-md);
-  margin-bottom: var(--space-xxl);
-  background-color: var(--white);
-  padding: var(--space-lg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  grid-template-columns: 1.5fr 1fr auto 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 }
 
 .gridHeader {
   font-weight: 700;
-  padding: var(--space-md);
-  background-color: color-mix(in srgb, var(--light-bg), transparent 20%);
-  border-radius: var(--radius-md);
-  color: var(--dark-green);
-  text-align: center;
+  color: var(--primary);
+  padding: 1rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  gap: 0.75rem;
+  border-bottom: 2px solid var(--border);
+  font-size: 1.1rem;
+}
+
+.gridIcon {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .propertyLabel {
-  font-weight: 600;
-  padding: var(--space-md);
-  color: var(--dark-green);
-  background-color: var(--light-bg);
-  border-radius: var(--radius-md);
+  background-color: var(--light);
+  padding: 1rem;
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0.75rem;
+  font-weight: 500;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.propertyValue {
+  padding: 1rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.resultIcon {
+  width: 1rem;
+  height: 1rem;
 }
 
 .higher {
-  color: var(--success-green);
-  font-weight: 600;
-  background-color: rgba(56, 161, 105, 0.1);
-  padding: var(--space-sm);
-  border-radius: var(--radius-sm);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  background-color: rgba(0, 98, 65, 0.1);
+  color: var(--primary);
 }
 
 .lower {
-  color: var(--error-red);
-  font-weight: 600;
-  background-color: rgba(229, 62, 62, 0.1);
-  padding: var(--space-sm);
-  border-radius: var(--radius-sm);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  background-color: rgba(227, 24, 55, 0.1);
+  color: var(--error);
 }
 
 .equal {
-  color: var(--primary-green);
-  font-weight: 600;
-  background-color: rgba(0, 98, 65, 0.1);
-  padding: var(--space-sm);
-  border-radius: var(--radius-sm);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text);
 }
 
 .different {
-  color: var(--gold);
-  font-weight: 600;
-  background-color: var(--light-gold);
-  padding: var(--space-sm);
-  border-radius: var(--radius-sm);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  background-color: rgba(255, 196, 0, 0.1);
+  color: var(--accent);
 }
 
 .visualComparison {
-  margin-top: var(--space-xxl);
-  animation: slideUp 0.5s 0.2s ease-out both;
+  border-top: 1px solid var(--border);
+  padding-top: 2.5rem;
+  margin-top: 2.5rem;
 }
 
 .visualComparison h3 {
-  font-size: 1.75rem;
-  color: var(--dark-green);
-  margin-bottom: var(--space-lg);
-  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-}
-
-.coffeeCards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--space-xl);
-}
-
-.coffeeCard {
-  border: 1px solid var(--light-gray);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  background-color: var(--white);
-  transition: all var(--transition-normal);
-}
-
-.coffeeCard:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--gold);
-}
-
-.coffeeCard img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.coffeeCard:hover img {
-  transform: scale(1.05);
-}
-
-.coffeeCard h4 {
-  padding: var(--space-lg) var(--space-lg) var(--space-sm);
-  font-size: 1.25rem;
-  color: var(--dark-green);
+  gap: 0.75rem;
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
   font-weight: 600;
 }
 
-.coffeeCard p {
-  padding: 0 var(--space-lg) var(--space-lg);
-  color: var(--medium-gray);
-  line-height: 1.6;
+.visualIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.visualCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.visualCard {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.visualCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.imageContainer {
+  height: 220px;
+  background: var(--light);
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.visualCard:hover .image {
+  transform: scale(1.08);
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardContent h4 {
+  color: var(--primary);
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.cardContent p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {
-  .comparisonGrid {
-    grid-template-columns: 1fr;
+  .container {
+    padding: 1.5rem;
   }
 
-  .selectorContainer {
+  .header {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .selectorContainer,
+  .visualCards {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .comparisonGrid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .gridHeader {
+    display: none;
+  }
+
+  .propertyLabel {
+    grid-column: 1;
+    font-weight: 600;
+    background-color: transparent;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    padding: 1rem 0 0.5rem 0;
+  }
+
+  .propertyValue,
+  .result {
+    grid-column: 1;
+    padding: 0.5rem 0;
+    justify-content: flex-start;
+  }
+
+  .visualCard {
+    max-width: 100%;
   }
 }

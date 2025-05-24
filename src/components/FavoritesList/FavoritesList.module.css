@@ -1,68 +1,101 @@
-/* FavoritesList.module.css */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-xl);
+  padding: 1rem;
 }
 
 .header {
-  margin-bottom: var(--space-xl);
-  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.title {
-  font-size: 2rem;
-  color: var(--dark-gray);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+.header h1 {
+  color: #006241;
+  margin: 0;
 }
 
-.heartIcon {
-  color: var(--error-red);
+.info {
+  color: #767676;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: var(--space-lg);
-  margin-top: var(--space-lg);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.resultsInfo {
-  color: var(--medium-gray);
-  font-style: italic;
-  margin-bottom: var(--space-md);
-}
-
-.emptyState {
-  text-align: center;
-  padding: var(--space-xxl);
-  color: var(--medium-gray);
+.empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-md);
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #767676;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  margin-top: 2rem;
 }
 
-.emptyIcon {
+.icon {
   width: 3rem;
   height: 3rem;
-  color: var(--error-red);
+  color: #e31837;
+  margin-bottom: 1rem;
 }
 
-.browseButton {
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--error-red);
-  color: var(--white);
+.emptyContent h2 {
+  color: #e31837;
+  margin-top: 0;
+}
+
+.button {
+  background-color: #006241;
+  color: white;
   border: none;
-  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: var(--space-md);
-  transition: background-color var(--transition-normal);
+  margin-top: 1rem;
 }
 
-.browseButton:hover {
-  background-color: color-mix(in srgb, var(--error-red), black 10%);
+.button:hover {
+  background-color: #004d33;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: #767676;
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+}
+
+.loading {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #006241;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

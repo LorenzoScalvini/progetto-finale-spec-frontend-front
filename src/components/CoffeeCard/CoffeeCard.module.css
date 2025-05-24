@@ -1,117 +1,95 @@
-/* CoffeeCard.module.css */
 .card {
-  padding: var(--space-lg);
-  border: 1px solid var(--light-gray);
-  border-radius: var(--radius-lg);
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
   cursor: pointer;
-  background-color: var(--white);
-  transition: all var(--transition-normal);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  animation: fadeIn var(--transition-slow);
+  transition: all 0.2s ease;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--gold);
-}
-
-.title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--dark-green);
-  margin: 0 0 var(--space-sm) 0;
-  transition: color var(--transition-normal);
-}
-
-.card:hover .title {
-  color: var(--gold);
-}
-
-.category {
-  font-size: 0.875rem;
-  color: var(--medium-gray);
-  margin: 0 0 var(--space-md) 0;
-  text-transform: capitalize;
-  padding: var(--space-xs) var(--space-sm);
-  background-color: var(--light-gold);
-  border-radius: var(--radius-lg);
-  display: inline-block;
-  align-self: flex-start;
-}
-
-.date {
-  font-size: 0.75rem;
-  color: var(--medium-gray);
-  margin: auto 0 0 0;
-  font-style: italic;
-}
-
-.imageContainer {
-  width: 100%;
-  height: 180px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin-bottom: var(--space-md);
-  position: relative;
-}
-
-.coffeeImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.card:hover .coffeeImage {
-  transform: scale(1.05);
-}
-
-.organicBadge {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
-  background-color: rgba(0, 98, 65, 0.9);
-  color: var(--white);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-lg);
-  font-size: 0.7rem;
-  font-weight: 600;
-  z-index: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #006241; /* Starbucks green */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coffeeEmoji {
+  font-size: 1.5rem;
 }
 
 .favoriteButton {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--space-sm);
-  margin-left: var(--space-sm);
+  padding: 0.25rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
-.favoriteIconSolid {
-  color: var(--error-red);
+.favoriteActive {
+  color: #e31837; /* Starbucks red */
+}
+
+.favoriteInactive {
+  color: #767676;
+}
+
+.favoriteIcon {
   width: 1.5rem;
   height: 1.5rem;
 }
 
-.favoriteIconOutline {
-  color: var(--medium-gray);
-  width: 1.5rem;
-  height: 1.5rem;
-  transition: color var(--transition-normal);
+.cardContent {
+  margin-bottom: 1rem;
 }
 
-.favoriteButton:hover .favoriteIconOutline {
-  color: var(--error-red);
+.category,
+.origin {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0.25rem 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #006241;
+}
+
+.cardFooter {
+  font-size: 0.8rem;
+  color: #767676;
+  text-align: right;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
