@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// Custom hook per gestire la logica dei caffè
 export const useCoffeeLogic = () => {
   const [coffees, setCoffees] = useState([]);
   const [favorites, setFavorites] = useState(
@@ -11,6 +12,7 @@ export const useCoffeeLogic = () => {
   const [error, setError] = useState(null);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
+  // Effetto per caricare i caffè all'avvio
   useEffect(() => {
     const fetchCoffees = async () => {
       try {
@@ -28,6 +30,7 @@ export const useCoffeeLogic = () => {
     fetchCoffees();
   }, [baseUrl]);
 
+  //Funzione per il toggle dei preferiti
   const toggleFavorite = (id) => {
     const newFavorites = favorites.includes(id)
       ? favorites.filter((favId) => favId !== id)
@@ -36,6 +39,7 @@ export const useCoffeeLogic = () => {
     setFavorites(newFavorites);
   };
 
+  //Funzione per ottenere un caffè per ID
   const getCoffeeById = async (id) => {
     try {
       const response = await axios.get(`${baseUrl}/coffees/${id}`);

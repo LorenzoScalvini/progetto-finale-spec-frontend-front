@@ -16,7 +16,7 @@ const FavoritesList = () => {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loading}></div>
-        <p>Loading your favorite coffees...</p>
+        <p>Caricamento dei tuoi caffè preferiti...</p>
       </div>
     );
   }
@@ -24,21 +24,21 @@ const FavoritesList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>My Favorite Coffees</h1>
+        <h1>I miei caffè preferiti</h1>
       </div>
 
       {!favoriteCoffees.length ? (
         <div className={styles.empty}>
           <HeartIcon className={styles.icon} />
           <div className={styles.emptyContent}>
-            <h2>No Favorite Coffees</h2>
-            <p>You haven't added any coffees to your favorites yet.</p>
+            <h2>Nessun caffè preferito</h2>
+            <p>Non hai ancora aggiunto caffè ai tuoi preferiti.</p>
             <p>
-              Explore our collection and click the heart icon to save your
-              favorites!
+              Esplora la nostra collezione e clicca sull'icona del cuore per
+              salvare i tuoi preferiti!
             </p>
             <button onClick={() => navigate("/")} className={styles.button}>
-              Browse Collection
+              Esplora la collezione
             </button>
           </div>
         </div>
@@ -46,9 +46,9 @@ const FavoritesList = () => {
         <>
           <div className={styles.info}>
             <span>
-              <strong>{favoriteCoffees.length}</strong> favorite{" "}
-              {favoriteCoffees.length === 1 ? "coffee" : "coffees"} in your
-              collection
+              <strong>{favoriteCoffees.length}</strong> caffè{" "}
+              {favoriteCoffees.length === 1 ? "preferito" : "preferiti"} nella
+              tua collezione
             </span>
           </div>
 
@@ -66,8 +66,8 @@ const FavoritesList = () => {
 
           <div className={styles.hint}>
             <p>
-              Click on a coffee to view details or click the heart again to
-              remove from favorites.
+              Clicca su un caffè per vedere i dettagli o clicca di nuovo sul
+              cuore per rimuoverlo dai preferiti.
             </p>
           </div>
         </>

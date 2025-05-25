@@ -67,7 +67,7 @@ const CoffeeList = () => {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loading}></div>
-        <p>Loading our premium coffee selection...</p>
+        <p>Caricamento della nostra selezione premium di caffè...</p>
       </div>
     );
   }
@@ -75,14 +75,14 @@ const CoffeeList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>Our Premium Coffee Collection</h1>
+        <h1>La Nostra Collezione Premium di Caffè</h1>
 
         <div className={styles.controls}>
           <div className={styles.search}>
             <MagnifyingGlassIcon className={styles.icon} />
             <input
               type="text"
-              placeholder="Search for your perfect coffee..."
+              placeholder="Cerca il tuo caffè perfetto..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.input}
@@ -94,7 +94,7 @@ const CoffeeList = () => {
             onChange={(e) => handleCategorySelect(e.target.value)}
             className={styles.select}
           >
-            <option value="">All Categories</option>
+            <option value="">Tutte le categorie</option>
             {categories.slice(1).map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -113,25 +113,25 @@ const CoffeeList = () => {
               ? sortDirection === "asc"
                 ? "A-Z ↓"
                 : "Z-A ↑"
-              : "Sort A-Z"}
+              : "Ordina A-Z"}
           </button>
         </div>
       </div>
 
       <div className={styles.info}>
         <span>
-          Showing <strong>{filteredCoffees.length}</strong> of{" "}
-          <strong>{coffees.length}</strong> coffees
+          Mostrati <strong>{filteredCoffees.length}</strong> di{" "}
+          <strong>{coffees.length}</strong> caffè
         </span>
 
         {sortBy === "category" && selectedCategory && (
-          <span> • Sorted by category</span>
+          <span> • Ordinati per categoria</span>
         )}
 
         {favorites.length > 0 && (
           <span>
             {" "}
-            • <strong>{favorites.length}</strong> in favorites
+            • <strong>{favorites.length}</strong> nei preferiti
           </span>
         )}
       </div>
@@ -150,8 +150,11 @@ const CoffeeList = () => {
 
       {filteredCoffees.length === 0 && (
         <div className={styles.empty}>
-          <p>No coffees found with current search criteria.</p>
-          <p>Try changing your search term or select a different category.</p>
+          <p>Nessun caffè trovato con i criteri di ricerca attuali.</p>
+          <p>
+            Prova a cambiare il termine di ricerca o seleziona una categoria
+            diversa.
+          </p>
         </div>
       )}
     </div>

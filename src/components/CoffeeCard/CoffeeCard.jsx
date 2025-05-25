@@ -27,7 +27,7 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      aria-label={`View details for ${coffee.title}`}
+      aria-label={`Vedi dettagli per ${coffee.title}`}
     >
       <header className={styles.cardHeader}>
         <h2 className={styles.title}>
@@ -44,8 +44,8 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
           }`}
           aria-label={
             isFavorite
-              ? `Remove ${coffee.title} from favorites`
-              : `Add ${coffee.title} to favorites`
+              ? `Rimuovi ${coffee.title} dai preferiti`
+              : `Aggiungi ${coffee.title} ai preferiti`
           }
         >
           {isFavorite ? (
@@ -58,24 +58,24 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
 
       <div className={styles.cardContent}>
         <p className={styles.category}>
-          <span className={styles.label}>Category:</span>
+          <span className={styles.label}>Categoria:</span>
           <span>{coffee.category}</span>
         </p>
 
         {coffee.origin && (
           <p className={styles.origin}>
-            <span className={styles.label}>Origin:</span>
+            <span className={styles.label}>Origine:</span>
             <span>{coffee.origin}</span>
           </p>
         )}
 
         <span className={styles.srOnly}>
-          {isFavorite ? "This coffee is in your favorites" : ""}
+          {isFavorite ? "Questo caffè è nei tuoi preferiti" : ""}
         </span>
       </div>
 
       <footer className={styles.cardFooter}>
-        <span>Click for more details</span>
+        <span>Clicca per maggiori dettagli</span>
       </footer>
     </article>
   );

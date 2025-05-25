@@ -15,10 +15,10 @@ const CoffeeDetail = () => {
     const loadCoffee = async () => {
       try {
         const data = await getCoffeeById(id);
-        if (!data?.id) throw new Error("Invalid coffee data");
+        if (!data?.id) throw new Error("Dati del caffè non validi");
         setCoffee(data);
       } catch (err) {
-        setError(err.message || "Failed to load coffee");
+        setError(err.message || "Errore nel caricamento del caffè");
       } finally {
         setLoading(false);
       }
@@ -30,7 +30,7 @@ const CoffeeDetail = () => {
     return (
       <div className={styles.container}>
         <div className={styles.loading}></div>
-        <p>Loading coffee details...</p>
+        <p>Caricamento dettagli caffè...</p>
       </div>
     );
   }
@@ -39,19 +39,19 @@ const CoffeeDetail = () => {
     return (
       <div className={styles.container}>
         <div className={styles.error}>
-          <h3>{error ? "Error" : "Coffee Not Found"}</h3>
-          <p>{error || "This coffee is not available"}</p>
+          <h3>{error ? "Errore" : "Caffè non trovato"}</h3>
+          <p>{error || "Questo caffè non è disponibile"}</p>
           <button onClick={() => navigate(-1)} className={styles.button}>
-            Back to Menu
+            Torna al Menù
           </button>
         </div>
       </div>
     );
   }
 
-  const formatPrice = new Intl.NumberFormat("en-US", {
+  const formatPrice = new Intl.NumberFormat("it-IT", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
   }).format(coffee.price);
 
   const flavors = coffee.flavor.join(", ");
@@ -59,12 +59,12 @@ const CoffeeDetail = () => {
   return (
     <div className={styles.container}>
       <button onClick={() => navigate(-1)} className={styles.button}>
-        ← Back to Menu
+        ← Torna al Menù
       </button>
 
       <div className={styles.header}>
         <h1>{coffee.title}</h1>
-        {coffee.organic && <span className={styles.badge}>★ Organic</span>}
+        {coffee.organic && <span className={styles.badge}>★ Biologico</span>}
       </div>
 
       <div className={styles.card}>
@@ -77,41 +77,41 @@ const CoffeeDetail = () => {
         </div>
 
         <div className={styles.description}>
-          <h3>Tasting Notes</h3>
+          <h3>Note di Degustazione</h3>
           <p>{coffee.description}</p>
         </div>
 
         <div className={styles.details}>
           <div className={styles.detailItem}>
-            <span>Category:</span>
+            <span>Categoria:</span>
             <span>{coffee.category}</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Origin:</span>
+            <span>Origine:</span>
             <span>{coffee.origin}</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Roast Level:</span>
+            <span>Livello di tostatura:</span>
             <span>{coffee.roastLevel}</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Flavor Profile:</span>
+            <span>Profilo aromatico:</span>
             <span>{flavors}</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Acidity:</span>
+            <span>Acidità:</span>
             <span>{coffee.acidity}/10</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Body:</span>
+            <span>Corpo:</span>
             <span>{coffee.body}/10</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Price:</span>
+            <span>Prezzo:</span>
             <span>{formatPrice}</span>
           </div>
           <div className={styles.detailItem}>
-            <span>Packaging:</span>
+            <span>Confezione:</span>
             <span>{coffee.packaging}</span>
           </div>
         </div>

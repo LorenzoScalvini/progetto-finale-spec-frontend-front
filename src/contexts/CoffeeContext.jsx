@@ -12,6 +12,7 @@ export const CoffeeProvider = ({ children }) => {
   );
 };
 
+// Custom hook to use the CoffeeContext
 export const useCoffee = () => {
   const context = useContext(CoffeeContext);
   if (!context) {

@@ -43,7 +43,7 @@ const CoffeeComparison = () => {
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
-        [position]: error.message || "Error loading coffee details",
+        [position]: error.message || "Errore nel caricamento dei dettagli",
       }));
     } finally {
       setLoading((prev) => ({ ...prev, [position]: false }));
@@ -69,45 +69,45 @@ const CoffeeComparison = () => {
   const comparisonItems = useMemo(
     () => [
       {
-        label: "Category",
+        label: "Categoria",
         getValue: (coffee) => coffee.category,
         icon: <ScaleIcon className={styles.icon} />,
-        description: "Coffee category",
+        description: "Categoria del caffè",
       },
       {
-        label: "Origin",
+        label: "Origine",
         getValue: (coffee) => coffee.origin,
         icon: <MapPinIcon className={styles.icon} />,
-        description: "Country of origin",
+        description: "Paese d'origine",
       },
       {
-        label: "Roast Level",
+        label: "Tostatura",
         getValue: (coffee) => coffee.roastLevel,
         icon: <FireIcon className={styles.icon} />,
-        description: "Roast intensity",
+        description: "Intensità di tostatura",
       },
       {
-        label: "Flavor Profile",
-        getValue: (coffee) => coffee.flavor?.join(", ") || "Not specified",
+        label: "Profilo aromatico",
+        getValue: (coffee) => coffee.flavor?.join(", ") || "Non specificato",
         icon: <SparklesIcon className={styles.icon} />,
-        description: "Flavor notes",
+        description: "Note aromatiche",
       },
       {
-        label: "Acidity",
+        label: "Acidità",
         getValue: (coffee) => `${coffee.acidity}/10`,
         isNumeric: true,
         icon: <ArrowUpIcon className={styles.icon} />,
-        description: "Acidity level",
+        description: "Livello di acidità",
       },
       {
-        label: "Body",
+        label: "Corpo",
         getValue: (coffee) => `${coffee.body}/10`,
         isNumeric: true,
         icon: <ArrowDownIcon className={styles.icon} />,
-        description: "Body intensity",
+        description: "Intensità del corpo",
       },
       {
-        label: "Price",
+        label: "Prezzo",
         getValue: (coffee) =>
           new Intl.NumberFormat("it-IT", {
             style: "currency",
@@ -115,19 +115,19 @@ const CoffeeComparison = () => {
           }).format(coffee.price),
         isNumeric: true,
         icon: <CurrencyEuroIcon className={styles.icon} />,
-        description: "Product price",
+        description: "Prezzo del prodotto",
       },
       {
-        label: "Packaging",
+        label: "Confezione",
         getValue: (coffee) => coffee.packaging,
         icon: <ArchiveBoxIcon className={styles.icon} />,
-        description: "Package type",
+        description: "Tipo di confezione",
       },
       {
-        label: "Organic",
-        getValue: (coffee) => (coffee.organic ? "Yes" : "No"),
+        label: "Biologico",
+        getValue: (coffee) => (coffee.organic ? "Sì" : "No"),
         icon: <CheckBadgeIcon className={styles.icon} />,
-        description: "Organic certification",
+        description: "Certificazione biologica",
       },
     ],
     []
@@ -170,25 +170,25 @@ const CoffeeComparison = () => {
       <header className={styles.header}>
         <h1>
           <ScaleIcon className={styles.headerIcon} />
-          Coffee Comparison
+          Confronto Caffè
         </h1>
         <div className={styles.actions}>
           <button
             onClick={() => navigate("/")}
             className={styles.button}
-            aria-label="Return to main page"
+            aria-label="Torna alla pagina principale"
           >
             <HomeIcon className={styles.buttonIcon} />
-            Back to Main
+            Torna alla Home
           </button>
           <button
             onClick={resetComparison}
             disabled={!selectedCoffees[0] && !selectedCoffees[1]}
             className={styles.button}
-            aria-label="Reset comparison"
+            aria-label="Azzera il confronto"
           >
             <ArrowPathIcon className={styles.buttonIcon} />
-            Reset
+            Azzera
           </button>
         </div>
       </header>
@@ -198,7 +198,7 @@ const CoffeeComparison = () => {
           <div key={position} className={styles.selector}>
             <label htmlFor={`selector-${position}`}>
               <TrophyIcon className={styles.selectorIcon} />
-              {position === "first" ? "First" : "Second"} Coffee to Compare
+              {position === "first" ? "Primo" : "Secondo"} caffè da confrontare
             </label>
 
             <select
@@ -206,9 +206,11 @@ const CoffeeComparison = () => {
               value={selectedCoffees[position === "first" ? 0 : 1]?.id || ""}
               onChange={(e) => handleCoffeeSelect(position, e.target.value)}
               className={styles.select}
-              aria-label={`Select ${position} coffee for comparison`}
+              aria-label={`Seleziona ${
+                position === "first" ? "primo" : "secondo"
+              } caffè per il confronto`}
             >
-              <option value="">-- Select a coffee --</option>
+              <option value="">-- Seleziona un caffè --</option>
               {coffees.map((coffee) => (
                 <option key={coffee.id} value={coffee.id}>
                   {coffee.title}
@@ -219,7 +221,7 @@ const CoffeeComparison = () => {
             {loading[position] && (
               <div className={styles.loading}>
                 <ClockIcon className={styles.statusIcon} />
-                <span>Loading coffee details...</span>
+                <span>Caricamento dettagli...</span>
               </div>
             )}
 
@@ -238,7 +240,7 @@ const CoffeeComparison = () => {
           <div className={styles.comparisonGrid}>
             <div className={styles.gridHeader}>
               <ScaleIcon className={styles.gridIcon} />
-              <span>Property</span>
+              <span>Proprietà</span>
             </div>
             <div className={styles.gridHeader}>
               <TrophyIcon className={styles.gridIcon} />
@@ -246,7 +248,7 @@ const CoffeeComparison = () => {
             </div>
             <div className={styles.gridHeader}>
               <ArrowsRightLeftIcon className={styles.gridIcon} />
-              <span>Comparison</span>
+              <span>Confronto</span>
             </div>
             <div className={styles.gridHeader}>
               <TrophyIcon className={styles.gridIcon} />
@@ -274,7 +276,15 @@ const CoffeeComparison = () => {
                   </div>
                   <div className={`${styles.result} ${styles[result]}`}>
                     {getResultIcon(result)}
-                    <span>{result}</span>
+                    <span>
+                      {result === "higher"
+                        ? "maggiore"
+                        : result === "lower"
+                        ? "minore"
+                        : result === "equal"
+                        ? "uguale"
+                        : "differente"}
+                    </span>
                   </div>
                   <div className={styles.propertyValue}>
                     {item.getValue(selectedCoffees[1])}
@@ -287,7 +297,7 @@ const CoffeeComparison = () => {
           <div className={styles.visualComparison}>
             <h3>
               <SparklesIcon className={styles.visualIcon} />
-              <span>Visual Comparison</span>
+              <span>Confronto visivo</span>
             </h3>
 
             <div className={styles.visualCards}>
@@ -296,19 +306,21 @@ const CoffeeComparison = () => {
                   <div className={styles.imageContainer}>
                     <img
                       src={coffee?.imageUrl || "/placeholder.jpg"}
-                      alt={`${coffee?.title} coffee`}
+                      alt={`Caffè ${coffee?.title}`}
                       className={styles.image}
                       loading="lazy"
                       onError={(e) => {
                         e.target.src = "/placeholder.jpg";
-                        e.target.alt = "Image not available";
+                        e.target.alt = "Immagine non disponibile";
                       }}
                     />
                   </div>
 
                   <div className={styles.cardContent}>
                     <h4>{coffee?.title}</h4>
-                    <p>{coffee?.description || "No description available"}</p>
+                    <p>
+                      {coffee?.description || "Nessuna descrizione disponibile"}
+                    </p>
                   </div>
                 </div>
               ))}
