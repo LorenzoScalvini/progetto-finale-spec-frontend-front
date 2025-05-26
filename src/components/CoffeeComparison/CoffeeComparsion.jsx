@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   HomeIcon,
@@ -27,44 +27,82 @@ const CoffeeComparison = () => {
   const [loading, setLoading] = useState({ first: false, second: false });
   const [errors, setErrors] = useState({});
 
-  const loadCoffeeDetails = async (coffeeId, position) => {
-    if (!coffeeId) return;
+  const loadCoffeeDetails = useCallback(
+    async (coffeeId, position) => {
+      if (!coffeeId) return;
 
-    setLoading((prev) => ({ ...prev, [position]: true }));
-    setErrors((prev) => ({ ...prev, [position]: undefined }));
+      setLoading((prev) => ({ ...prev, [position]: true }));
+      setErrors((prev) => ({ ...prev, [position]: undefined }));
 
-    try {
-      const details = await getCoffeeById(coffeeId);
+      try {
+        const details = await getCoffeeById(coffeeId);
+        setSelectedCoffees((prev) => {
+          const newCoffees = [...prev];
+          newCoffees[position === "first" ? 0 : 1] = details;
+          return newCoffees;
+        });
+      } catch (error) {
+        setErrors((prev) => ({
+          ...prev,
+          [position]: error.message || "Errore nel caricamento dei dettagli",
+        }));
+      } finally {
+        setLoading((prev) => ({ ...prev, [position]: false }));
+      }
+    },
+    [getCoffeeById]
+  );
+
+  const handleCoffeeSelect = useCallback(
+    (position, selectedId) => {
+      const id = selectedId ? parseInt(selectedId, 10) : null;
       setSelectedCoffees((prev) => {
         const newCoffees = [...prev];
-        newCoffees[position === "first" ? 0 : 1] = details;
+        newCoffees[position === "first" ? 0 : 1] = null;
         return newCoffees;
       });
-    } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        [position]: error.message || "Errore nel caricamento dei dettagli",
-      }));
-    } finally {
-      setLoading((prev) => ({ ...prev, [position]: false }));
-    }
-  };
 
-  const handleCoffeeSelect = (position, selectedId) => {
-    const id = selectedId ? parseInt(selectedId, 10) : null;
-    setSelectedCoffees((prev) => {
-      const newCoffees = [...prev];
-      newCoffees[position === "first" ? 0 : 1] = null;
-      return newCoffees;
-    });
+      if (id) loadCoffeeDetails(id, position);
+    },
+    [loadCoffeeDetails]
+  );
 
-    if (id) loadCoffeeDetails(id, position);
-  };
-
-  const resetComparison = () => {
+  const resetComparison = useCallback(() => {
     setSelectedCoffees([null, null]);
     setErrors({});
-  };
+  }, []);
+
+  const getComparisonResult = useCallback((coffeeA, coffeeB, item) => {
+    const valueA = item.getValue(coffeeA);
+    const valueB = item.getValue(coffeeB);
+
+    if (
+      item.isNumeric &&
+      typeof valueA === "string" &&
+      typeof valueB === "string"
+    ) {
+      const numA = parseFloat(valueA);
+      const numB = parseFloat(valueB);
+
+      if (!isNaN(numA) && !isNaN(numB)) {
+        if (numA > numB) return "higher";
+        if (numA < numB) return "lower";
+        return "equal";
+      }
+    }
+
+    return valueA === valueB ? "equal" : "different";
+  }, []);
+
+  const getResultIcon = useCallback((result) => {
+    const icons = {
+      higher: <ArrowUpIcon className={styles.resultIcon} />,
+      lower: <ArrowDownIcon className={styles.resultIcon} />,
+      equal: <ArrowsRightLeftIcon className={styles.resultIcon} />,
+      different: <SparklesIcon className={styles.resultIcon} />,
+    };
+    return icons[result] || icons.different;
+  }, []);
 
   const comparisonItems = useMemo(
     () => [
@@ -132,38 +170,6 @@ const CoffeeComparison = () => {
     ],
     []
   );
-
-  const getComparisonResult = (coffeeA, coffeeB, item) => {
-    const valueA = item.getValue(coffeeA);
-    const valueB = item.getValue(coffeeB);
-
-    if (
-      item.isNumeric &&
-      typeof valueA === "string" &&
-      typeof valueB === "string"
-    ) {
-      const numA = parseFloat(valueA);
-      const numB = parseFloat(valueB);
-
-      if (!isNaN(numA) && !isNaN(numB)) {
-        if (numA > numB) return "higher";
-        if (numA < numB) return "lower";
-        return "equal";
-      }
-    }
-
-    return valueA === valueB ? "equal" : "different";
-  };
-
-  const getResultIcon = (result) => {
-    const icons = {
-      higher: <ArrowUpIcon className={styles.resultIcon} />,
-      lower: <ArrowDownIcon className={styles.resultIcon} />,
-      equal: <ArrowsRightLeftIcon className={styles.resultIcon} />,
-      different: <SparklesIcon className={styles.resultIcon} />,
-    };
-    return icons[result] || icons.different;
-  };
 
   return (
     <div className={styles.container}>

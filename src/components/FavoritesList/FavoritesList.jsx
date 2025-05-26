@@ -6,8 +6,10 @@ import { useCoffee } from "../../contexts/CoffeeContext";
 
 const FavoritesList = () => {
   const navigate = useNavigate();
+  // Usa il contesto dei caffè per ottenere i dati necessari
   const { coffees, favorites, loading, toggleFavorite } = useCoffee();
 
+  // Filtra i caffè preferiti in base agli ID salvati nei preferiti
   const favoriteCoffees = coffees.filter((coffee) =>
     favorites.includes(coffee.id)
   );
@@ -26,7 +28,8 @@ const FavoritesList = () => {
       <div className={styles.header}>
         <h1>I miei caffè preferiti</h1>
       </div>
-
+      // Se non ci sono caffè preferiti, mostra un messaggio vuoto // altrimenti
+      mostra la lista dei caffè preferiti
       {!favoriteCoffees.length ? (
         <div className={styles.empty}>
           <HeartIcon className={styles.icon} />

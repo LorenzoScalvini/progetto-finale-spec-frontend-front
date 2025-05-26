@@ -18,6 +18,7 @@ const CoffeeList = () => {
   const [sortBy, setSortBy] = useState("none");
   const [sortDirection, setSortDirection] = useState("asc");
 
+  // Effetto per aggiornare il termine di ricerca visualizzato dopo un ritardo
   useEffect(() => {
     const timer = setTimeout(() => {
       setDisplayedSearchTerm(searchTerm);
@@ -25,8 +26,10 @@ const CoffeeList = () => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // Categorie uniche estratte dai caffè
   const categories = ["", ...new Set(coffees.map((coffee) => coffee.category))];
 
+  // Filtra i caffè in base al termine di ricerca e alla categoria selezionata
   let filteredCoffees = coffees.filter((coffee) => {
     const matchesSearch = coffee.title
       .toLowerCase()
@@ -36,6 +39,11 @@ const CoffeeList = () => {
     return matchesSearch && matchesCategory;
   });
 
+  // Ordina i caffè in base al criterio selezionato
+  // Se non è selezionato alcun criterio, non viene applicato alcun ordinamento
+  // Se è selezionato "title", ordina per titolo
+  // Se è selezionato "category", ordina per categoria
+  // Se è selezionato "none", non viene applicato alcun ordinamento
   if (sortBy === "title") {
     filteredCoffees.sort((a, b) => {
       const comparison = a.title.localeCompare(b.title);
@@ -48,6 +56,7 @@ const CoffeeList = () => {
     });
   }
 
+  // Se non è selezionato alcun criterio, i caffè rimangono nell'ordine originale
   const handleTitleSort = () => {
     if (sortBy === "title") {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -57,6 +66,7 @@ const CoffeeList = () => {
     }
   };
 
+  // Gestisce la selezione di una categoria
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setSortBy(category ? "category" : "none");

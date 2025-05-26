@@ -14,9 +14,11 @@ export const useCoffeeLogic = () => {
 
   // Effetto per caricare i caffè all'avvio
   useEffect(() => {
+    // Funzione per caricare i caffè
     const fetchCoffees = async () => {
       try {
         setLoading(true);
+        // Effettua la richiesta per ottenere i caffè
         const response = await axios.get(`${baseUrl}/coffees`);
         setCoffees(
           response.data.success ? response.data.coffees : response.data
@@ -27,20 +29,25 @@ export const useCoffeeLogic = () => {
         setLoading(false);
       }
     };
+    // Chiama la funzione per caricare i caffè
     fetchCoffees();
   }, [baseUrl]);
 
   //Funzione per il toggle dei preferiti
   const toggleFavorite = (id) => {
+    // Controlla se l'ID è già nei preferiti
     const newFavorites = favorites.includes(id)
       ? favorites.filter((favId) => favId !== id)
       : [...favorites, id];
+    // Aggiorna il localStorage e lo stato dei preferiti
     localStorage.setItem("favoriteCoffees", JSON.stringify(newFavorites));
     setFavorites(newFavorites);
   };
 
   //Funzione per ottenere un caffè per ID
   const getCoffeeById = async (id) => {
+    // Controlla se l'ID è valido
+    // Se l'ID non è un numero o è negativo, lancia un errore
     try {
       const response = await axios.get(`${baseUrl}/coffees/${id}`);
       const coffeeData = response.data.success

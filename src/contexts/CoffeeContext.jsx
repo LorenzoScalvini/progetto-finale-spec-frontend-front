@@ -3,6 +3,7 @@ import { useCoffeeLogic } from "../hooks/useCoffeeLogic";
 
 const CoffeeContext = createContext();
 
+// Componente Provider per gestire lo stato globale delle informazioni sui caffè
 export const CoffeeProvider = ({ children }) => {
   const coffeeLogic = useCoffeeLogic();
   return (
@@ -12,7 +13,7 @@ export const CoffeeProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the CoffeeContext
+// Custom hook per l'utilizzo del  CoffeeContext
 export const useCoffee = () => {
   const context = useContext(CoffeeContext);
   if (!context) {

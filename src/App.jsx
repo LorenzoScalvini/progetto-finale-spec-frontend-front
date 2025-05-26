@@ -10,6 +10,7 @@ import { CoffeeProvider } from "./contexts/CoffeeContext";
 
 function App() {
   return (
+    //Provider per gestire lo stato globale delle informazioni sui caffè e per fornire le funzioni di ricerca e gestione dei preferiti
     <CoffeeProvider>
       <Navbar logoSrc="/assets/starbucks-logo.png" />
       <Routes>
