@@ -8,19 +8,19 @@ import {
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 
-const Navbar = ({
+export default function Navbar({
   logoSrc,
-  brandName = " STARBUCKS",
   altText = "Starbucks Logo",
   buttonLabel = "Ordina ora",
   onButtonClick,
-}) => {
+}) {
   return (
     <nav className={styles.navbar}>
       <Link to="/" className={styles.brand}>
         <div className={styles.logoContainer}>
           <img src={logoSrc} alt={altText} className={styles.logo} />
         </div>
+        Starbucks
       </Link>
 
       <div className={styles.actions}>
@@ -46,6 +46,4 @@ const Navbar = ({
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

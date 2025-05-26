@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styles from "./CoffeeDetail.module.css";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
-const CoffeeDetail = () => {
+export default function CoffeeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getCoffeeById } = useCoffee();
@@ -118,6 +118,4 @@ const CoffeeDetail = () => {
       </div>
     </div>
   );
-};
-
-export default CoffeeDetail;
+}

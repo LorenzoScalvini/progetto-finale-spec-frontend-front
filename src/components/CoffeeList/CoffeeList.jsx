@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import CoffeeCard from "../CoffeeCard/CoffeeCard";
 import styles from "./CoffeeList.module.css";
@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
-const CoffeeList = () => {
+export default function CoffeeList() {
   const navigate = useNavigate();
   const { coffees, favorites, loading, toggleFavorite } = useCoffee();
 
@@ -18,7 +18,7 @@ const CoffeeList = () => {
   const [sortBy, setSortBy] = useState("none");
   const [sortDirection, setSortDirection] = useState("asc");
 
-  // Effetto per aggiornare il termine di ricerca visualizzato dopo un ritardo
+  // Effetto per il debounce della ricerca
   useEffect(() => {
     const timer = setTimeout(() => {
       setDisplayedSearchTerm(searchTerm);
@@ -26,52 +26,52 @@ const CoffeeList = () => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Categorie uniche estratte dai caffè
-  const categories = ["", ...new Set(coffees.map((coffee) => coffee.category))];
+  // Memoizzare le categorie per evitare ricalcoli non necessari
+  const categories = useMemo(() => {
+    return ["", ...new Set(coffees.map((coffee) => coffee.category))];
+  }, [coffees]);
 
-  // Filtra i caffè in base al termine di ricerca e alla categoria selezionata
-  let filteredCoffees = coffees.filter((coffee) => {
-    const matchesSearch = coffee.title
-      .toLowerCase()
-      .includes(displayedSearchTerm.toLowerCase());
-    const matchesCategory =
-      !selectedCategory || coffee.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  // Ordina i caffè in base al criterio selezionato
-  // Se non è selezionato alcun criterio, non viene applicato alcun ordinamento
-  // Se è selezionato "title", ordina per titolo
-  // Se è selezionato "category", ordina per categoria
-  // Se è selezionato "none", non viene applicato alcun ordinamento
-  if (sortBy === "title") {
-    filteredCoffees.sort((a, b) => {
-      const comparison = a.title.localeCompare(b.title);
-      return sortDirection === "asc" ? comparison : -comparison;
+  // Memoizzare i caffè filtrati e ordinati
+  const filteredCoffees = useMemo(() => {
+    let result = coffees.filter((coffee) => {
+      const matchesSearch = coffee.title
+        .toLowerCase()
+        .includes(displayedSearchTerm.toLowerCase());
+      const matchesCategory =
+        !selectedCategory || coffee.category === selectedCategory;
+      return matchesSearch && matchesCategory;
     });
-  } else if (sortBy === "category") {
-    filteredCoffees.sort((a, b) => {
-      const comparison = a.category.localeCompare(b.category);
-      return sortDirection === "asc" ? comparison : -comparison;
-    });
-  }
 
-  // Se non è selezionato alcun criterio, i caffè rimangono nell'ordine originale
-  const handleTitleSort = () => {
+    if (sortBy === "title") {
+      result.sort((a, b) => {
+        const comparison = a.title.localeCompare(b.title);
+        return sortDirection === "asc" ? comparison : -comparison;
+      });
+    } else if (sortBy === "category") {
+      result.sort((a, b) => {
+        const comparison = a.category.localeCompare(b.category);
+        return sortDirection === "asc" ? comparison : -comparison;
+      });
+    }
+
+    return result;
+  }, [coffees, displayedSearchTerm, selectedCategory, sortBy, sortDirection]);
+
+  // Funzioni di callback memoizzate
+  const handleTitleSort = useCallback(() => {
     if (sortBy === "title") {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy("title");
       setSortDirection("asc");
     }
-  };
+  }, [sortBy]);
 
-  // Gestisce la selezione di una categoria
-  const handleCategorySelect = (category) => {
+  const handleCategorySelect = useCallback((category) => {
     setSelectedCategory(category);
     setSortBy(category ? "category" : "none");
     setSortDirection("asc");
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -169,6 +169,4 @@ const CoffeeList = () => {
       )}
     </div>
   );
-};
-
-export default CoffeeList;
+}

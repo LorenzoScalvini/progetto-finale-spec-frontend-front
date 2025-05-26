@@ -8,7 +8,7 @@ import CoffeeFav from "./pages/CoffeeFav";
 import Footer from "./components/Footer/Footer";
 import { CoffeeProvider } from "./contexts/CoffeeContext";
 
-function App() {
+export default function App() {
   return (
     //Provider per gestire lo stato globale delle informazioni sui caffè e per fornire le funzioni di ricerca e gestione dei preferiti
     <CoffeeProvider>
@@ -23,5 +23,3 @@ function App() {
     </CoffeeProvider>
   );
 }
-
-export default App;

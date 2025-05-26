@@ -17,7 +17,7 @@ import {
   CameraIcon as InstagramIcon,
 } from "@heroicons/react/24/outline";
 
-const Footer = () => {
+export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
@@ -117,6 +117,4 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

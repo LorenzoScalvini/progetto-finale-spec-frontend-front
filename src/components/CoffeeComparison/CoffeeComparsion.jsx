@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   HomeIcon,
@@ -20,7 +20,100 @@ import {
 import styles from "./CoffeeComparison.module.css";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
-const CoffeeComparison = () => {
+const RESULT_ICONS = {
+  higher: <ArrowUpIcon className={styles.resultIcon} />,
+  lower: <ArrowDownIcon className={styles.resultIcon} />,
+  equal: <ArrowsRightLeftIcon className={styles.resultIcon} />,
+  different: <SparklesIcon className={styles.resultIcon} />,
+};
+
+const compareValues = (coffeeA, coffeeB, item) => {
+  const valueA = item.getValue(coffeeA);
+  const valueB = item.getValue(coffeeB);
+
+  if (
+    item.isNumeric &&
+    typeof valueA === "string" &&
+    typeof valueB === "string"
+  ) {
+    const numA = parseFloat(valueA);
+    const numB = parseFloat(valueB);
+
+    if (!isNaN(numA) && !isNaN(numB)) {
+      if (numA > numB) return "higher";
+      if (numA < numB) return "lower";
+      return "equal";
+    }
+  }
+
+  return valueA === valueB ? "equal" : "different";
+};
+
+const COMPARISON_ITEMS = [
+  {
+    label: "Categoria",
+    getValue: (coffee) => coffee.category,
+    icon: <ScaleIcon className={styles.icon} />,
+    description: "Categoria del caffè",
+  },
+  {
+    label: "Origine",
+    getValue: (coffee) => coffee.origin,
+    icon: <MapPinIcon className={styles.icon} />,
+    description: "Paese d'origine",
+  },
+  {
+    label: "Tostatura",
+    getValue: (coffee) => coffee.roastLevel,
+    icon: <FireIcon className={styles.icon} />,
+    description: "Intensità di tostatura",
+  },
+  {
+    label: "Profilo aromatico",
+    getValue: (coffee) => coffee.flavor?.join(", ") || "Non specificato",
+    icon: <SparklesIcon className={styles.icon} />,
+    description: "Note aromatiche",
+  },
+  {
+    label: "Acidità",
+    getValue: (coffee) => `${coffee.acidity}/10`,
+    isNumeric: true,
+    icon: <ArrowUpIcon className={styles.icon} />,
+    description: "Livello di acidità",
+  },
+  {
+    label: "Corpo",
+    getValue: (coffee) => `${coffee.body}/10`,
+    isNumeric: true,
+    icon: <ArrowDownIcon className={styles.icon} />,
+    description: "Intensità del corpo",
+  },
+  {
+    label: "Prezzo",
+    getValue: (coffee) =>
+      new Intl.NumberFormat("it-IT", {
+        style: "currency",
+        currency: "EUR",
+      }).format(coffee.price),
+    isNumeric: true,
+    icon: <CurrencyEuroIcon className={styles.icon} />,
+    description: "Prezzo del prodotto",
+  },
+  {
+    label: "Confezione",
+    getValue: (coffee) => coffee.packaging,
+    icon: <ArchiveBoxIcon className={styles.icon} />,
+    description: "Tipo di confezione",
+  },
+  {
+    label: "Biologico",
+    getValue: (coffee) => (coffee.organic ? "Sì" : "No"),
+    icon: <CheckBadgeIcon className={styles.icon} />,
+    description: "Certificazione biologica",
+  },
+];
+
+export default function CoffeeComparison() {
   const navigate = useNavigate();
   const { coffees, getCoffeeById } = useCoffee();
   const [selectedCoffees, setSelectedCoffees] = useState([null, null]);
@@ -67,109 +160,10 @@ const CoffeeComparison = () => {
     [loadCoffeeDetails]
   );
 
-  const resetComparison = useCallback(() => {
+  const resetComparison = () => {
     setSelectedCoffees([null, null]);
     setErrors({});
-  }, []);
-
-  const getComparisonResult = useCallback((coffeeA, coffeeB, item) => {
-    const valueA = item.getValue(coffeeA);
-    const valueB = item.getValue(coffeeB);
-
-    if (
-      item.isNumeric &&
-      typeof valueA === "string" &&
-      typeof valueB === "string"
-    ) {
-      const numA = parseFloat(valueA);
-      const numB = parseFloat(valueB);
-
-      if (!isNaN(numA) && !isNaN(numB)) {
-        if (numA > numB) return "higher";
-        if (numA < numB) return "lower";
-        return "equal";
-      }
-    }
-
-    return valueA === valueB ? "equal" : "different";
-  }, []);
-
-  const getResultIcon = useCallback((result) => {
-    const icons = {
-      higher: <ArrowUpIcon className={styles.resultIcon} />,
-      lower: <ArrowDownIcon className={styles.resultIcon} />,
-      equal: <ArrowsRightLeftIcon className={styles.resultIcon} />,
-      different: <SparklesIcon className={styles.resultIcon} />,
-    };
-    return icons[result] || icons.different;
-  }, []);
-
-  const comparisonItems = useMemo(
-    () => [
-      {
-        label: "Categoria",
-        getValue: (coffee) => coffee.category,
-        icon: <ScaleIcon className={styles.icon} />,
-        description: "Categoria del caffè",
-      },
-      {
-        label: "Origine",
-        getValue: (coffee) => coffee.origin,
-        icon: <MapPinIcon className={styles.icon} />,
-        description: "Paese d'origine",
-      },
-      {
-        label: "Tostatura",
-        getValue: (coffee) => coffee.roastLevel,
-        icon: <FireIcon className={styles.icon} />,
-        description: "Intensità di tostatura",
-      },
-      {
-        label: "Profilo aromatico",
-        getValue: (coffee) => coffee.flavor?.join(", ") || "Non specificato",
-        icon: <SparklesIcon className={styles.icon} />,
-        description: "Note aromatiche",
-      },
-      {
-        label: "Acidità",
-        getValue: (coffee) => `${coffee.acidity}/10`,
-        isNumeric: true,
-        icon: <ArrowUpIcon className={styles.icon} />,
-        description: "Livello di acidità",
-      },
-      {
-        label: "Corpo",
-        getValue: (coffee) => `${coffee.body}/10`,
-        isNumeric: true,
-        icon: <ArrowDownIcon className={styles.icon} />,
-        description: "Intensità del corpo",
-      },
-      {
-        label: "Prezzo",
-        getValue: (coffee) =>
-          new Intl.NumberFormat("it-IT", {
-            style: "currency",
-            currency: "EUR",
-          }).format(coffee.price),
-        isNumeric: true,
-        icon: <CurrencyEuroIcon className={styles.icon} />,
-        description: "Prezzo del prodotto",
-      },
-      {
-        label: "Confezione",
-        getValue: (coffee) => coffee.packaging,
-        icon: <ArchiveBoxIcon className={styles.icon} />,
-        description: "Tipo di confezione",
-      },
-      {
-        label: "Biologico",
-        getValue: (coffee) => (coffee.organic ? "Sì" : "No"),
-        icon: <CheckBadgeIcon className={styles.icon} />,
-        description: "Certificazione biologica",
-      },
-    ],
-    []
-  );
+  };
 
   return (
     <div className={styles.container}>
@@ -261,8 +255,8 @@ const CoffeeComparison = () => {
               <span>{selectedCoffees[1].title}</span>
             </div>
 
-            {comparisonItems.map((item, index) => {
-              const result = getComparisonResult(
+            {COMPARISON_ITEMS.map((item, index) => {
+              const result = compareValues(
                 selectedCoffees[0],
                 selectedCoffees[1],
                 item
@@ -281,7 +275,7 @@ const CoffeeComparison = () => {
                     {item.getValue(selectedCoffees[0])}
                   </div>
                   <div className={`${styles.result} ${styles[result]}`}>
-                    {getResultIcon(result)}
+                    {RESULT_ICONS[result]}
                     <span>
                       {result === "higher"
                         ? "maggiore"
@@ -336,6 +330,4 @@ const CoffeeComparison = () => {
       )}
     </div>
   );
-};
-
-export default CoffeeComparison;
+}
