@@ -1,51 +1,54 @@
 import { useNavigate } from "react-router-dom";
 import CoffeeCard from "../CoffeeCard/CoffeeCard";
-import styles from "./FavoritesList.module.css";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
 export default function FavoritesList() {
   const navigate = useNavigate();
-  // Usa il contesto dei caffè per ottenere i dati necessari
   const { coffees, favorites, loading, toggleFavorite } = useCoffee();
 
-  // Filtra i caffè preferiti in base agli ID salvati nei preferiti
   const favoriteCoffees = coffees.filter((coffee) =>
     favorites.includes(coffee.id)
   );
 
   if (loading) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loading}></div>
+      <section aria-busy="true" aria-live="polite" className="p-6 text-center">
         <p>Caricamento dei tuoi caffè preferiti...</p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>I miei caffè preferiti</h1>
-      </div>
-      {!favoriteCoffees.length ? (
-        <div className={styles.empty}>
-          <HeartIcon className={styles.icon} />
-          <div className={styles.emptyContent}>
-            <h2>Nessun caffè preferito</h2>
-            <p>Non hai ancora aggiunto caffè ai tuoi preferiti.</p>
-            <p>
-              Esplora la nostra collezione e clicca sull'icona del cuore per
-              salvare i tuoi preferiti!
-            </p>
-            <button onClick={() => navigate("/")} className={styles.button}>
-              Esplora la collezione
-            </button>
-          </div>
+    <section className="max-w-4xl mx-auto p-6">
+      <header className="mb-6">
+        <h1 className="text-3xl font-semibold text-green-900">
+          I miei caffè preferiti
+        </h1>
+      </header>
+
+      {favoriteCoffees.length === 0 ? (
+        <div className="text-center text-gray-700 space-y-4">
+          <HeartIcon
+            className="mx-auto h-12 w-12 text-red-500"
+            aria-hidden="true"
+          />
+          <h2 className="text-xl font-medium">Nessun caffè preferito</h2>
+          <p>Non hai ancora aggiunto caffè ai tuoi preferiti.</p>
+          <p>
+            Esplora la nostra collezione e clicca sull'icona del cuore per
+            salvarli!
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="mt-4 inline-block rounded bg-green-700 px-6 py-2 text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600"
+          >
+            Esplora la collezione
+          </button>
         </div>
       ) : (
         <>
-          <div className={styles.info}>
+          <div className="mb-4 text-green-900 font-semibold">
             <span>
               <strong>{favoriteCoffees.length}</strong> caffè{" "}
               {favoriteCoffees.length === 1 ? "preferito" : "preferiti"} nella
@@ -53,7 +56,7 @@ export default function FavoritesList() {
             </span>
           </div>
 
-          <div className={styles.grid}>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {favoriteCoffees.map((coffee) => (
               <CoffeeCard
                 key={coffee.id}
@@ -65,14 +68,14 @@ export default function FavoritesList() {
             ))}
           </div>
 
-          <div className={styles.hint}>
+          <footer className="mt-6 text-sm text-gray-600">
             <p>
               Clicca su un caffè per vedere i dettagli o clicca di nuovo sul
               cuore per rimuoverlo dai preferiti.
             </p>
-          </div>
+          </footer>
         </>
       )}
-    </div>
+    </section>
   );
 }

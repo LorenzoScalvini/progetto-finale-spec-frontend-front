@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import {
   HomeIcon,
@@ -15,33 +14,43 @@ export default function Navbar({
   onButtonClick,
 }) {
   return (
-    <nav className={styles.navbar}>
-      <Link to="/" className={styles.brand}>
-        <div className={styles.logoContainer}>
-          <img src={logoSrc} alt={altText} className={styles.logo} />
-        </div>
-        Starbucks
+    <nav className="bg-white shadow-md px-6 py-3 flex justify-between items-center">
+      <Link to="/" className="flex items-center space-x-3">
+        <img src={logoSrc} alt={altText} className="h-10 w-10 object-contain" />
+        <span className="text-xl font-semibold text-green-700">Starbucks</span>
       </Link>
 
-      <div className={styles.actions}>
-        <Link to="/" className={styles.linkButton}>
-          <HomeIcon className={styles.icon} />
-          Home
+      <div className="flex items-center space-x-8">
+        <Link
+          to="/"
+          className="flex items-center space-x-1 text-gray-700 hover:text-green-700 transition"
+        >
+          <HomeIcon className="h-6 w-6" />
+          <span>Home</span>
         </Link>
 
-        <Link to="/favorites" className={styles.linkButton}>
-          <HeartIcon className={styles.icon} />
-          Preferiti
+        <Link
+          to="/favorites"
+          className="flex items-center space-x-1 text-gray-700 hover:text-green-700 transition"
+        >
+          <HeartIcon className="h-6 w-6" />
+          <span>Preferiti</span>
         </Link>
 
-        <Link to="/coffeecomparator" className={styles.linkButton}>
-          <ScaleIcon className={styles.icon} />
-          Confronta
+        <Link
+          to="/coffeecomparator"
+          className="flex items-center space-x-1 text-gray-700 hover:text-green-700 transition"
+        >
+          <ScaleIcon className="h-6 w-6" />
+          <span>Confronta</span>
         </Link>
 
-        <button className={styles.button} onClick={onButtonClick}>
-          <ShoppingBagIcon className={styles.icon} />
-          {buttonLabel}
+        <button
+          onClick={onButtonClick}
+          className="flex items-center space-x-1 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition"
+        >
+          <ShoppingBagIcon className="h-6 w-6" />
+          <span>{buttonLabel}</span>
         </button>
       </div>
     </nav>

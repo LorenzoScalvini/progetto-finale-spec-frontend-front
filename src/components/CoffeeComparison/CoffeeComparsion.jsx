@@ -1,332 +1,195 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  HomeIcon,
-  ArrowPathIcon,
-  ScaleIcon,
-  TrophyIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ArrowsRightLeftIcon,
-  SparklesIcon,
-  ClockIcon,
-  ExclamationTriangleIcon,
-  MapPinIcon,
-  FireIcon,
-  CurrencyEuroIcon,
-  ArchiveBoxIcon,
-  CheckBadgeIcon,
-} from "@heroicons/react/24/outline";
-import styles from "./CoffeeComparison.module.css";
+import React, { useState, useEffect } from "react";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
-const RESULT_ICONS = {
-  higher: <ArrowUpIcon className={styles.resultIcon} />,
-  lower: <ArrowDownIcon className={styles.resultIcon} />,
-  equal: <ArrowsRightLeftIcon className={styles.resultIcon} />,
-  different: <SparklesIcon className={styles.resultIcon} />,
-};
-
-const compareValues = (coffeeA, coffeeB, item) => {
-  const valueA = item.getValue(coffeeA);
-  const valueB = item.getValue(coffeeB);
-
-  if (
-    item.isNumeric &&
-    typeof valueA === "string" &&
-    typeof valueB === "string"
-  ) {
-    const numA = parseFloat(valueA);
-    const numB = parseFloat(valueB);
-
-    if (!isNaN(numA) && !isNaN(numB)) {
-      if (numA > numB) return "higher";
-      if (numA < numB) return "lower";
-      return "equal";
-    }
-  }
-
-  return valueA === valueB ? "equal" : "different";
-};
-
-const COMPARISON_ITEMS = [
-  {
-    label: "Categoria",
-    getValue: (coffee) => coffee.category,
-    icon: <ScaleIcon className={styles.icon} />,
-    description: "Categoria del caffè",
-  },
-  {
-    label: "Origine",
-    getValue: (coffee) => coffee.origin,
-    icon: <MapPinIcon className={styles.icon} />,
-    description: "Paese d'origine",
-  },
-  {
-    label: "Tostatura",
-    getValue: (coffee) => coffee.roastLevel,
-    icon: <FireIcon className={styles.icon} />,
-    description: "Intensità di tostatura",
-  },
-  {
-    label: "Profilo aromatico",
-    getValue: (coffee) => coffee.flavor?.join(", ") || "Non specificato",
-    icon: <SparklesIcon className={styles.icon} />,
-    description: "Note aromatiche",
-  },
-  {
-    label: "Acidità",
-    getValue: (coffee) => `${coffee.acidity}/10`,
-    isNumeric: true,
-    icon: <ArrowUpIcon className={styles.icon} />,
-    description: "Livello di acidità",
-  },
-  {
-    label: "Corpo",
-    getValue: (coffee) => `${coffee.body}/10`,
-    isNumeric: true,
-    icon: <ArrowDownIcon className={styles.icon} />,
-    description: "Intensità del corpo",
-  },
-  {
-    label: "Prezzo",
-    getValue: (coffee) =>
-      new Intl.NumberFormat("it-IT", {
-        style: "currency",
-        currency: "EUR",
-      }).format(coffee.price),
-    isNumeric: true,
-    icon: <CurrencyEuroIcon className={styles.icon} />,
-    description: "Prezzo del prodotto",
-  },
-  {
-    label: "Confezione",
-    getValue: (coffee) => coffee.packaging,
-    icon: <ArchiveBoxIcon className={styles.icon} />,
-    description: "Tipo di confezione",
-  },
-  {
-    label: "Biologico",
-    getValue: (coffee) => (coffee.organic ? "Sì" : "No"),
-    icon: <CheckBadgeIcon className={styles.icon} />,
-    description: "Certificazione biologica",
-  },
-];
-
 export default function CoffeeComparison() {
-  const navigate = useNavigate();
   const { coffees, getCoffeeById } = useCoffee();
-  const [selectedCoffees, setSelectedCoffees] = useState([null, null]);
-  const [loading, setLoading] = useState({ first: false, second: false });
-  const [errors, setErrors] = useState({});
+  const [firstId, setFirstId] = useState("");
+  const [secondId, setSecondId] = useState("");
+  const [coffeeA, setCoffeeA] = useState(null);
+  const [coffeeB, setCoffeeB] = useState(null);
 
-  const loadCoffeeDetails = useCallback(
-    async (coffeeId, position) => {
-      if (!coffeeId) return;
+  useEffect(() => {
+    if (firstId) {
+      getCoffeeById(parseInt(firstId)).then(setCoffeeA);
+    } else {
+      setCoffeeA(null);
+    }
+  }, [firstId, getCoffeeById]);
 
-      setLoading((prev) => ({ ...prev, [position]: true }));
-      setErrors((prev) => ({ ...prev, [position]: undefined }));
-
-      try {
-        const details = await getCoffeeById(coffeeId);
-        setSelectedCoffees((prev) => {
-          const newCoffees = [...prev];
-          newCoffees[position === "first" ? 0 : 1] = details;
-          return newCoffees;
-        });
-      } catch (error) {
-        setErrors((prev) => ({
-          ...prev,
-          [position]: error.message || "Errore nel caricamento dei dettagli",
-        }));
-      } finally {
-        setLoading((prev) => ({ ...prev, [position]: false }));
-      }
-    },
-    [getCoffeeById]
-  );
-
-  const handleCoffeeSelect = useCallback(
-    (position, selectedId) => {
-      const id = selectedId ? parseInt(selectedId, 10) : null;
-      setSelectedCoffees((prev) => {
-        const newCoffees = [...prev];
-        newCoffees[position === "first" ? 0 : 1] = null;
-        return newCoffees;
-      });
-
-      if (id) loadCoffeeDetails(id, position);
-    },
-    [loadCoffeeDetails]
-  );
-
-  const resetComparison = () => {
-    setSelectedCoffees([null, null]);
-    setErrors({});
-  };
+  useEffect(() => {
+    if (secondId) {
+      getCoffeeById(parseInt(secondId)).then(setCoffeeB);
+    } else {
+      setCoffeeB(null);
+    }
+  }, [secondId, getCoffeeById]);
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h1>
-          <ScaleIcon className={styles.headerIcon} />
-          Confronto Caffè
-        </h1>
-        <div className={styles.actions}>
-          <button
-            onClick={() => navigate("/")}
-            className={styles.button}
-            aria-label="Torna alla pagina principale"
+    <div className="max-w-3xl mx-auto p-4 space-y-6">
+      <h2 className="text-xl font-semibold text-green-700 mb-6">
+        Confronta due caffè
+      </h2>
+
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="flex-1">
+          <label
+            htmlFor="firstCoffee"
+            className="block text-green-700 font-medium mb-1"
           >
-            <HomeIcon className={styles.buttonIcon} />
-            Torna alla Home
-          </button>
-          <button
-            onClick={resetComparison}
-            disabled={!selectedCoffees[0] && !selectedCoffees[1]}
-            className={styles.button}
-            aria-label="Azzera il confronto"
+            Primo caffè
+          </label>
+          <select
+            id="firstCoffee"
+            value={firstId}
+            onChange={(e) => setFirstId(e.target.value)}
+            className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+            aria-label="Seleziona il primo caffè"
           >
-            <ArrowPathIcon className={styles.buttonIcon} />
-            Azzera
-          </button>
+            <option value="">Seleziona</option>
+            {coffees.map((coffee) => (
+              <option key={coffee.id} value={coffee.id}>
+                {coffee.title}
+              </option>
+            ))}
+          </select>
         </div>
-      </header>
 
-      <div className={styles.selectorContainer}>
-        {["first", "second"].map((position) => (
-          <div key={position} className={styles.selector}>
-            <label htmlFor={`selector-${position}`}>
-              <TrophyIcon className={styles.selectorIcon} />
-              {position === "first" ? "Primo" : "Secondo"} caffè da confrontare
-            </label>
-
-            <select
-              id={`selector-${position}`}
-              value={selectedCoffees[position === "first" ? 0 : 1]?.id || ""}
-              onChange={(e) => handleCoffeeSelect(position, e.target.value)}
-              className={styles.select}
-              aria-label={`Seleziona ${
-                position === "first" ? "primo" : "secondo"
-              } caffè per il confronto`}
-            >
-              <option value="">-- Seleziona un caffè --</option>
-              {coffees.map((coffee) => (
-                <option key={coffee.id} value={coffee.id}>
-                  {coffee.title}
-                </option>
-              ))}
-            </select>
-
-            {loading[position] && (
-              <div className={styles.loading}>
-                <ClockIcon className={styles.statusIcon} />
-                <span>Caricamento dettagli...</span>
-              </div>
-            )}
-
-            {errors[position] && (
-              <div className={styles.error} role="alert">
-                <ExclamationTriangleIcon className={styles.statusIcon} />
-                <span>{errors[position]}</span>
-              </div>
-            )}
-          </div>
-        ))}
+        <div className="flex-1">
+          <label
+            htmlFor="secondCoffee"
+            className="block text-green-700 font-medium mb-1"
+          >
+            Secondo caffè
+          </label>
+          <select
+            id="secondCoffee"
+            value={secondId}
+            onChange={(e) => setSecondId(e.target.value)}
+            className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+            aria-label="Seleziona il secondo caffè"
+          >
+            <option value="">Seleziona</option>
+            {coffees.map((coffee) => (
+              <option key={coffee.id} value={coffee.id}>
+                {coffee.title}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {selectedCoffees[0] && selectedCoffees[1] && (
-        <div className={styles.comparison}>
-          <div className={styles.comparisonGrid}>
-            <div className={styles.gridHeader}>
-              <ScaleIcon className={styles.gridIcon} />
-              <span>Proprietà</span>
-            </div>
-            <div className={styles.gridHeader}>
-              <TrophyIcon className={styles.gridIcon} />
-              <span>{selectedCoffees[0].title}</span>
-            </div>
-            <div className={styles.gridHeader}>
-              <ArrowsRightLeftIcon className={styles.gridIcon} />
-              <span>Confronto</span>
-            </div>
-            <div className={styles.gridHeader}>
-              <TrophyIcon className={styles.gridIcon} />
-              <span>{selectedCoffees[1].title}</span>
+      {coffeeA && coffeeB && (
+        <>
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex flex-col items-center w-1/2 text-left">
+              <h3 className="text-2xl font-bold text-green-800 mb-2">
+                {coffeeA.title}
+              </h3>
+              <img
+                src={coffeeA.imageUrl || "/placeholder.jpg"}
+                alt={coffeeA.title}
+                width={200}
+                height={200}
+                className="rounded shadow-sm object-cover border border-green-200"
+              />
             </div>
 
-            {COMPARISON_ITEMS.map((item, index) => {
-              const result = compareValues(
-                selectedCoffees[0],
-                selectedCoffees[1],
-                item
-              );
-
-              return (
-                <React.Fragment key={index}>
-                  <div
-                    className={styles.propertyLabel}
-                    title={item.description}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </div>
-                  <div className={styles.propertyValue}>
-                    {item.getValue(selectedCoffees[0])}
-                  </div>
-                  <div className={`${styles.result} ${styles[result]}`}>
-                    {RESULT_ICONS[result]}
-                    <span>
-                      {result === "higher"
-                        ? "maggiore"
-                        : result === "lower"
-                        ? "minore"
-                        : result === "equal"
-                        ? "uguale"
-                        : "differente"}
-                    </span>
-                  </div>
-                  <div className={styles.propertyValue}>
-                    {item.getValue(selectedCoffees[1])}
-                  </div>
-                </React.Fragment>
-              );
-            })}
-          </div>
-
-          <div className={styles.visualComparison}>
-            <h3>
-              <SparklesIcon className={styles.visualIcon} />
-              <span>Confronto visivo</span>
-            </h3>
-
-            <div className={styles.visualCards}>
-              {selectedCoffees.map((coffee, index) => (
-                <div key={`visual-${index}`} className={styles.visualCard}>
-                  <div className={styles.imageContainer}>
-                    <img
-                      src={coffee?.imageUrl || "/placeholder.jpg"}
-                      alt={`Caffè ${coffee?.title}`}
-                      className={styles.image}
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.src = "/placeholder.jpg";
-                        e.target.alt = "Immagine non disponibile";
-                      }}
-                    />
-                  </div>
-
-                  <div className={styles.cardContent}>
-                    <h4>{coffee?.title}</h4>
-                    <p>
-                      {coffee?.description || "Nessuna descrizione disponibile"}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col items-center w-1/2 text-right">
+              <h3 className="text-2xl font-bold text-green-800 mb-2">
+                {coffeeB.title}
+              </h3>
+              <img
+                src={coffeeB.imageUrl || "/placeholder.jpg"}
+                alt={coffeeB.title}
+                width={200}
+                height={200}
+                className="rounded shadow-sm object-cover border border-green-200"
+              />
             </div>
           </div>
-        </div>
+
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Categoria</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.category || "-"}</span>
+                <span>{coffeeB.category || "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Origine</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.origin || "-"}</span>
+                <span>{coffeeB.origin || "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Tostatura</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.roastLevel || "-"}</span>
+                <span>{coffeeB.roastLevel || "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Aromaticità</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.flavor ? coffeeA.flavor.join(", ") : "-"}</span>
+                <span>{coffeeB.flavor ? coffeeB.flavor.join(", ") : "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Acidità</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.acidity ?? "-"}</span>
+                <span>{coffeeB.acidity ?? "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Corpo</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.body ?? "-"}</span>
+                <span>{coffeeB.body ?? "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Prezzo</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>
+                  {coffeeA.price != null
+                    ? `€ ${coffeeA.price.toFixed(2)}`
+                    : "-"}
+                </span>
+                <span>
+                  {coffeeB.price != null
+                    ? `€ ${coffeeB.price.toFixed(2)}`
+                    : "-"}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Confezione</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.packaging || "-"}</span>
+                <span>{coffeeB.packaging || "-"}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-green-700 font-semibold mb-1">Biologico</h4>
+              <div className="flex justify-between bg-green-50 border border-green-200 rounded p-3">
+                <span>{coffeeA.organic ? "Sì" : "No"}</span>
+                <span>{coffeeB.organic ? "Sì" : "No"}</span>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

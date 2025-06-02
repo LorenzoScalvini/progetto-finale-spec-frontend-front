@@ -1,5 +1,4 @@
 import { memo } from "react";
-import styles from "./CoffeeCard.module.css";
 import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 
@@ -22,59 +21,55 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
 
   return (
     <article
-      className={styles.card}
       onClick={handleCardClick}
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
       aria-label={`Vedi dettagli per ${coffee.title}`}
+      className="relative cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-600 transition"
     >
-      <header className={styles.cardHeader}>
-        <h2 className={styles.title}>
-          <span className={styles.coffeeEmoji} aria-hidden="true">
+      <header className="flex justify-between items-start mb-3">
+        <h2 className="text-lg font-semibold text-green-800 flex items-center gap-2">
+          <span aria-hidden="true" className="text-xl">
             ☕
           </span>
-          <span>{coffee.title}</span>
+          {coffee.title}
         </h2>
 
         <button
           onClick={handleFavoriteClick}
-          className={`${styles.favoriteButton} ${
-            isFavorite ? styles.favoriteActive : styles.favoriteInactive
-          }`}
           aria-label={
             isFavorite
               ? `Rimuovi ${coffee.title} dai preferiti`
               : `Aggiungi ${coffee.title} ai preferiti`
           }
+          className="text-green-600 hover:text-red-500 focus:outline-none"
         >
           {isFavorite ? (
-            <HeartSolid className={styles.favoriteIcon} aria-hidden="true" />
+            <HeartSolid className="w-5 h-5" />
           ) : (
-            <HeartOutline className={styles.favoriteIcon} aria-hidden="true" />
+            <HeartOutline className="w-5 h-5" />
           )}
         </button>
       </header>
 
-      <div className={styles.cardContent}>
-        <p className={styles.category}>
-          <span className={styles.label}>Categoria:</span>
-          <span>{coffee.category}</span>
+      <div className="text-gray-700 mb-4 space-y-1">
+        <p>
+          <strong>Categoria:</strong> {coffee.category}
         </p>
 
         {coffee.origin && (
-          <p className={styles.origin}>
-            <span className={styles.label}>Origine:</span>
-            <span>{coffee.origin}</span>
+          <p>
+            <strong>Origine:</strong> {coffee.origin}
           </p>
         )}
 
-        <span className={styles.srOnly}>
-          {isFavorite ? "Questo caffè è nei tuoi preferiti" : ""}
-        </span>
+        {isFavorite && (
+          <span className="sr-only">Questo caffè è nei tuoi preferiti</span>
+        )}
       </div>
 
-      <footer className={styles.cardFooter}>
+      <footer className="text-sm text-gray-500">
         <span>Clicca per maggiori dettagli</span>
       </footer>
     </article>

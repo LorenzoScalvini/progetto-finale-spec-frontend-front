@@ -1,152 +1,131 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import CoffeeCard from "../CoffeeCard/CoffeeCard";
-import styles from "./CoffeeList.module.css";
-import {
-  MagnifyingGlassIcon,
-  ArrowsUpDownIcon,
-} from "@heroicons/react/24/outline";
 import { useCoffee } from "../../contexts/CoffeeContext";
 
 export default function CoffeeList() {
   const navigate = useNavigate();
-  const { coffees, favorites, loading, toggleFavorite } = useCoffee();
+  const { coffees, favorites, toggleFavorite } = useCoffee();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [displayedSearchTerm, setDisplayedSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [sortBy, setSortBy] = useState("none");
+  const [sortBy, setSortBy] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
 
-  // Effetto per il debounce della ricerca
-  useEffect(() => {
+  // Debounce per il filtro ricerca
+  const debounceSearch = useCallback(() => {
     const timer = setTimeout(() => {
       setDisplayedSearchTerm(searchTerm);
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Memoizzare le categorie per evitare ricalcoli non necessari
-  const categories = useMemo(() => {
-    return ["", ...new Set(coffees.map((coffee) => coffee.category))];
-  }, [coffees]);
+  useEffect(() => {
+    const cancel = debounceSearch();
+    return cancel;
+  }, [debounceSearch]);
 
-  // Memoizzare i caffè filtrati e ordinati
-  const filteredCoffees = useMemo(() => {
-    let result = coffees.filter((coffee) => {
-      const matchesSearch = coffee.title
+  // Categorie dinamiche dai dati
+  const categories = [""];
+  coffees.forEach((c) => {
+    if (!categories.includes(c.category)) {
+      categories.push(c.category);
+    }
+  });
+
+  // Filtraggio + ordinamento
+  const filteredCoffees = coffees
+    .filter((coffee) => {
+      const matchSearch = coffee.title
         .toLowerCase()
         .includes(displayedSearchTerm.toLowerCase());
-      const matchesCategory =
+      const matchCategory =
         !selectedCategory || coffee.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      return matchSearch && matchCategory;
+    })
+    .sort((a, b) => {
+      if (sortBy === "title") {
+        const compare = a.title.localeCompare(b.title);
+        return sortDirection === "asc" ? compare : -compare;
+      }
+      return 0;
     });
 
-    if (sortBy === "title") {
-      result.sort((a, b) => {
-        const comparison = a.title.localeCompare(b.title);
-        return sortDirection === "asc" ? comparison : -comparison;
-      });
-    } else if (sortBy === "category") {
-      result.sort((a, b) => {
-        const comparison = a.category.localeCompare(b.category);
-        return sortDirection === "asc" ? comparison : -comparison;
-      });
-    }
-
-    return result;
-  }, [coffees, displayedSearchTerm, selectedCategory, sortBy, sortDirection]);
-
-  // Funzioni di callback memoizzate
-  const handleTitleSort = useCallback(() => {
+  // Gestione ordinamento titolo
+  const handleTitleSort = () => {
     if (sortBy === "title") {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy("title");
       setSortDirection("asc");
     }
-  }, [sortBy]);
+  };
 
-  const handleCategorySelect = useCallback((category) => {
-    setSelectedCategory(category);
-    setSortBy(category ? "category" : "none");
+  // Gestione cambio categoria
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  //Bottone reset: pulisce tutti i filtri
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setDisplayedSearchTerm("");
+    setSelectedCategory("");
+    setSortBy("");
     setSortDirection("asc");
-  }, []);
-
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loading}></div>
-        <p>Caricamento della nostra selezione premium di caffè...</p>
-      </div>
-    );
-  }
+  };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>La Nostra Collezione Premium di Caffè</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-green-800 mb-6">
+        Collezione Caffè
+      </h1>
 
-        <div className={styles.controls}>
-          <div className={styles.search}>
-            <MagnifyingGlassIcon className={styles.icon} />
-            <input
-              type="text"
-              placeholder="Cerca il tuo caffè perfetto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.input}
-            />
-          </div>
+      {/* Controlli */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-6 space-y-3 sm:space-y-0">
+        {/* Ricerca */}
+        <input
+          type="text"
+          placeholder="Cerca caffè..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 shadow-sm w-full sm:w-auto"
+        />
 
-          <select
-            value={selectedCategory}
-            onChange={(e) => handleCategorySelect(e.target.value)}
-            className={styles.select}
-          >
-            <option value="">Tutte le categorie</option>
-            {categories.slice(1).map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+        {/* Filtro categoria */}
+        <select
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          className="border border-gray-300 rounded-md px-3 py-2 shadow-sm"
+        >
+          <option value="">Tutte le categorie</option>
+          {categories.slice(1).map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
 
-          <button
-            onClick={handleTitleSort}
-            className={`${styles.button} ${
-              sortBy === "title" ? styles.active : ""
-            }`}
-          >
-            <ArrowsUpDownIcon className={styles.sortIcon} />
-            {sortBy === "title"
-              ? sortDirection === "asc"
-                ? "A-Z ↓"
-                : "Z-A ↑"
-              : "Ordina A-Z"}
-          </button>
-        </div>
+        {/* Ordina titolo */}
+        <button
+          onClick={handleTitleSort}
+          className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition"
+        >
+          Ordina {sortDirection === "asc" ? "A-Z" : "Z-A"}
+        </button>
+
+        {/*Bottone reset */}
+        <button
+          onClick={handleResetFilters}
+          className="text-gray-600 border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-100 transition"
+        >
+          Reset filtri
+        </button>
       </div>
 
-      <div className={styles.info}>
-        <span>
-          Mostrati <strong>{filteredCoffees.length}</strong> di{" "}
-          <strong>{coffees.length}</strong> caffè
-        </span>
-
-        {sortBy === "category" && selectedCategory && (
-          <span> • Ordinati per categoria</span>
-        )}
-
-        {favorites.length > 0 && (
-          <span>
-            {" "}
-            • <strong>{favorites.length}</strong> nei preferiti
-          </span>
-        )}
-      </div>
-
-      <div className={styles.grid}>
+      {/* Lista caffè */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCoffees.map((coffee) => (
           <CoffeeCard
             key={coffee.id}
@@ -158,13 +137,13 @@ export default function CoffeeList() {
         ))}
       </div>
 
+      {/* Messaggio se nessun caffè */}
       {filteredCoffees.length === 0 && (
-        <div className={styles.empty}>
-          <p>Nessun caffè trovato con i criteri di ricerca attuali.</p>
-          <p>
-            Prova a cambiare il termine di ricerca o seleziona una categoria
-            diversa.
+        <div className="mt-10 text-center text-gray-500">
+          <p className="mb-2 font-semibold">
+            Nessun caffè trovato con i criteri selezionati.
           </p>
+          <p>Prova a cambiare la ricerca o la categoria.</p>
         </div>
       )}
     </div>
