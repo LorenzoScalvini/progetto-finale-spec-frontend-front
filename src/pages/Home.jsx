@@ -1,9 +1,5 @@
 import CoffeeList from "../components/CoffeeList/CoffeeList";
 
 export default function Home() {
-  return (
-    <div>
-      <CoffeeList />
-    </div>
-  );
+  return <CoffeeList />;
 }

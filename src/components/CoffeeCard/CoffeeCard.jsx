@@ -2,22 +2,41 @@ import { memo } from "react";
 import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 
-const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
-  const handleFavoriteClick = (e) => {
-    e.stopPropagation();
+function CoffeeCard(props) {
+  const coffee = props.coffee;
+  const onClick = props.onClick;
+  const isFavorite = props.isFavorite;
+  const onToggleFavorite = props.onToggleFavorite;
+
+  function handleFavoriteClick(event) {
+    event.stopPropagation();
     onToggleFavorite(coffee.id);
-  };
+  }
 
-  const handleCardClick = () => {
+  function handleCardClick() {
     onClick(coffee.id);
-  };
+  }
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
+  function handleKeyDown(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
       handleCardClick();
     }
-  };
+  }
+
+  let ariaLabel;
+  if (isFavorite === true) {
+    ariaLabel = "Rimuovi " + coffee.title + " dai preferiti";
+  } else {
+    ariaLabel = "Aggiungi " + coffee.title + " ai preferiti";
+  }
+
+  let heartIcon;
+  if (isFavorite === true) {
+    heartIcon = <HeartSolid className="w-5 h-5" />;
+  } else {
+    heartIcon = <HeartOutline className="w-5 h-5" />;
+  }
 
   return (
     <article
@@ -25,7 +44,7 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      aria-label={`Vedi dettagli per ${coffee.title}`}
+      aria-label={"Vedi dettagli per " + coffee.title}
       className="relative cursor-pointer rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-600 transition"
     >
       <header className="flex justify-between items-start mb-3">
@@ -38,18 +57,10 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
 
         <button
           onClick={handleFavoriteClick}
-          aria-label={
-            isFavorite
-              ? `Rimuovi ${coffee.title} dai preferiti`
-              : `Aggiungi ${coffee.title} ai preferiti`
-          }
+          aria-label={ariaLabel}
           className="text-green-600 hover:text-red-500 focus:outline-none"
         >
-          {isFavorite ? (
-            <HeartSolid className="w-5 h-5" />
-          ) : (
-            <HeartOutline className="w-5 h-5" />
-          )}
+          {heartIcon}
         </button>
       </header>
 
@@ -58,13 +69,13 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
           <strong>Categoria:</strong> {coffee.category}
         </p>
 
-        {coffee.origin && (
+        {coffee.origin !== undefined && coffee.origin !== null && (
           <p>
             <strong>Origine:</strong> {coffee.origin}
           </p>
         )}
 
-        {isFavorite && (
+        {isFavorite === true && (
           <span className="sr-only">Questo caffè è nei tuoi preferiti</span>
         )}
       </div>
@@ -74,6 +85,6 @@ const CoffeeCard = memo(({ coffee, onClick, isFavorite, onToggleFavorite }) => {
       </footer>
     </article>
   );
-});
+}
 
-export default CoffeeCard;
+export default memo(CoffeeCard);

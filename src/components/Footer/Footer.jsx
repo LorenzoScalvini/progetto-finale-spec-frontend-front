@@ -41,7 +41,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Section Link Utili */}
         <div className="lg:w-1/3 space-y-4">
           <h3 className="text-xl font-semibold border-b border-green-600 pb-2">
             Link Utili
@@ -66,7 +65,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Section Contattaci */}
         <div className="lg:w-1/3 space-y-4">
           <h3 className="text-xl font-semibold border-b border-green-600 pb-2">
             Contattaci
@@ -92,7 +90,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Footer bottom */}
       <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-green-700 flex flex-col sm:flex-row justify-between text-green-400 text-sm gap-4">
         <div>
           &copy; {new Date().getFullYear()} Starbucks Coffee Company. Tutti i

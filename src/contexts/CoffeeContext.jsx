@@ -4,20 +4,16 @@ import { useCoffeeLogic } from "../hooks/useCoffeeLogic";
 
 const CoffeeContext = createContext();
 
-export const CoffeeProvider = ({ children }) => {
+export const CoffeeProvider = function (props) {
   const coffeeLogic = useCoffeeLogic();
+
   return (
     <CoffeeContext.Provider value={coffeeLogic}>
-      {children}
+      {props.children}
     </CoffeeContext.Provider>
   );
 };
 
-// Aggiungi questo custom hook per usare il context
-export const useCoffee = () => {
-  const context = useContext(CoffeeContext);
-  if (!context) {
-    throw new Error("useCoffee must be used within a CoffeeProvider");
-  }
-  return context;
+export const useCoffee = function () {
+  return useContext(CoffeeContext);
 };
